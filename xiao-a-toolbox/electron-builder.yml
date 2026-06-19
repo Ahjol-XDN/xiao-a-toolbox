@@ -1,6 +1,6 @@
-appId: com.xiaoa.toolbox
-productName: 小A万能转换工具箱
-copyright: Copyright © 2024
+﻿appId: com.xiaoa.toolbox
+productName: "小A万能转换工具箱"
+copyright: "Copyright 2024"
 directories:
   output: dist
   buildResources: resources
@@ -9,16 +9,13 @@ files:
   - dist
 win:
   target:
-    - target: nsis
-      arch: [x64]
-  icon: resources/icons/icon.ico
-nsis:
-  oneClick: false
-  allowToChangeInstallationDirectory: true
-  createDesktopShortcut: true
-  createStartMenuShortcut: true
-  shortcutName: 小A万能转换工具箱
+    - target: portable
+      arch:
+        - x64
+  icon: resources/icons/icon.png
+  signAndEditExecutable: false
 extraResources:
   - from: engines/
     to: engines/
-    filter: ["**/*"]
+    filter:
+      - "**/*"
