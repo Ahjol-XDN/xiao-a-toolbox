@@ -1,0 +1,12 @@
+node_modules/ 
+dist/ 
+dist-electron/ 
+engines/ 
+*.zip 
+dl.js 
+serve.js 
+rewrite*.js 
+*bom* 
+*pkg* 
+check.js 
+.vite/
