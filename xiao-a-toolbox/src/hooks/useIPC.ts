@@ -1,4 +1,4 @@
-import { useCallback, useRef } from "react";
+﻿import { useCallback, useRef } from "react";
 
 interface ProgressInfo {
   percent: number;
@@ -24,8 +24,10 @@ export function useIPC() {
   const convertAudio = (opts: any) => window.electronAPI.convertAudio(opts);
   const convertVideoToGif = (opts: any) => window.electronAPI.convertVideoToGif(opts);
   const extractAudio = (opts: any) => window.electronAPI.extractAudio(opts);
+  const extractFrame = (opts: any) => window.electronAPI.extractFrame(opts);
   const compressVideo = (opts: any) => window.electronAPI.compressVideo(opts);
   const trimVideo = (opts: any) => window.electronAPI.trimVideo(opts);
+  const trimAudio = (opts: any) => window.electronAPI.trimAudio(opts);
   const audioMerge = (opts: any) => window.electronAPI.audioMerge(opts);
   const convertDocument = (opts: any) => window.electronAPI.convertDocument(opts);
   const convertImage = (opts: any) => window.electronAPI.convertImage(opts);
@@ -34,6 +36,14 @@ export function useIPC() {
   const batchConvert = (tasks: any[]) => window.electronAPI.batchConvert(tasks);
   const getEngines = () => window.electronAPI.getEngines();
   const cancelConvert = () => window.electronAPI.cancelConvert();
+  const getMediaInfo = (path: string) => window.electronAPI.getMediaInfo(path);
+  const getConfig = (key?: string) => window.electronAPI.getConfig(key);
+  const setConfig = (key: string, value: any) => window.electronAPI.setConfig(key, value);
+  const getHistory = () => window.electronAPI.getHistory();
+  const addHistory = (entry: any) => window.electronAPI.addHistory(entry);
+  const clearHistory = () => window.electronAPI.clearHistory();
+  const notify = (title: string, body: string) => window.electronAPI.notify(title, body);
+  const openDirectory = () => window.electronAPI.openDirectory();
 
   return {
     startProgress,
@@ -42,8 +52,10 @@ export function useIPC() {
     convertAudio,
     convertVideoToGif,
     extractAudio,
+    extractFrame,
     compressVideo,
     trimVideo,
+    trimAudio,
     audioMerge,
     convertDocument,
     convertImage,
@@ -52,5 +64,13 @@ export function useIPC() {
     batchConvert,
     getEngines,
     cancelConvert,
+    getMediaInfo,
+    getConfig,
+    setConfig,
+    getHistory,
+    addHistory,
+    clearHistory,
+    notify,
+    openDirectory,
   };
 }

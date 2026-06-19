@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from "electron";
+﻿import { contextBridge, ipcRenderer } from "electron";
 
 export interface ConvertOptions {
   inputPath: string;
@@ -22,12 +22,45 @@ export interface EngineStatus {
   paths: Record<string, string>;
 }
 
+export interface HistoryEntry {
+  input: string;
+  output: string;
+  format: string;
+  mode: string;
+  status: string;
+  timestamp: number;
+}
+
 const api = {
   openFile: (filters?: { name: string; extensions: string[] }[]) =>
     ipcRenderer.invoke("dialog:openFile", { filters }) as Promise<string[]>,
 
+  openDirectory: () =>
+    ipcRenderer.invoke("dialog:openDirectory") as Promise<string | null>,
+
   saveFile: (options?: { filters?: { name: string; extensions: string[] }[]; defaultPath?: string }) =>
     ipcRenderer.invoke("dialog:saveFile", options) as Promise<string | null>,
+
+  getConfig: (key?: string) =>
+    ipcRenderer.invoke("config:get", key) as Promise<any>,
+
+  setConfig: (key: string, value: any) =>
+    ipcRenderer.invoke("config:set", key, value) as Promise<any>,
+
+  getHistory: () =>
+    ipcRenderer.invoke("history:get") as Promise<HistoryEntry[]>,
+
+  addHistory: (entry: Omit<HistoryEntry, "timestamp">) =>
+    ipcRenderer.invoke("history:add", entry) as Promise<HistoryEntry[]>,
+
+  clearHistory: () =>
+    ipcRenderer.invoke("history:clear") as Promise<[]>,
+
+  notify: (title: string, body: string) =>
+    ipcRenderer.invoke("app:notify", title, body),
+
+  getMediaInfo: (path: string) =>
+    ipcRenderer.invoke("ffprobe:getInfo", path) as Promise<any>,
 
   convertVideo: (opts: ConvertOptions) =>
     ipcRenderer.invoke("ffmpeg:convertVideo", opts) as Promise<string>,
@@ -41,11 +74,17 @@ const api = {
   extractAudio: (opts: ConvertOptions) =>
     ipcRenderer.invoke("ffmpeg:extractAudio", opts) as Promise<string>,
 
+  extractFrame: (opts: ConvertOptions) =>
+    ipcRenderer.invoke("ffmpeg:extractFrame", opts) as Promise<string>,
+
   compressVideo: (opts: ConvertOptions) =>
     ipcRenderer.invoke("ffmpeg:compressVideo", opts) as Promise<string>,
 
   trimVideo: (opts: ConvertOptions) =>
     ipcRenderer.invoke("ffmpeg:trimVideo", opts) as Promise<string>,
+
+  trimAudio: (opts: ConvertOptions) =>
+    ipcRenderer.invoke("ffmpeg:trimAudio", opts) as Promise<string>,
 
   audioMerge: (opts: { inputPaths: string[]; outputPath: string; format: string; params?: Record<string, string | number> }) =>
     ipcRenderer.invoke("ffmpeg:audioMerge", opts) as Promise<string>,

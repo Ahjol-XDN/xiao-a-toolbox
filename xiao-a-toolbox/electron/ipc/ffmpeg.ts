@@ -1,4 +1,4 @@
-import { ipcMain, BrowserWindow } from "electron";
+﻿import { ipcMain, BrowserWindow } from "electron";
 import { spawn, ChildProcess } from "child_process";
 import { getEnginePaths } from "../engines";
 import { parseFfmpegProgress } from "../utils";
@@ -7,6 +7,10 @@ let currentProcess: ChildProcess | null = null;
 
 function getFfmpeg() {
   return getEnginePaths().ffmpeg;
+}
+
+function getFfprobe() {
+  return getEnginePaths().ffprobe;
 }
 
 function runFfmpeg(args: string[], onData?: (line: string) => void): Promise<void> {
@@ -49,6 +53,30 @@ function buildVideoArgs(inputPath: string, outputPath: string, format: string, p
 }
 
 export function registerFfmpegHandlers() {
+  // --- ffprobe media info ---
+  ipcMain.handle("ffprobe:getInfo", async (_e, filePath: string) => {
+    return new Promise((resolve, reject) => {
+      const ffprobe = getFfprobe();
+      const proc = spawn(ffprobe, [
+        "-v", "quiet", "-print_format", "json",
+        "-show_format", "-show_streams", filePath,
+      ]);
+      let stdout = "";
+      let stderr = "";
+      proc.stdout.on("data", (d: Buffer) => { stdout += d.toString(); });
+      proc.stderr.on("data", (d: Buffer) => { stderr += d.toString(); });
+      proc.on("close", (code) => {
+        if (code === 0) {
+          try { resolve(JSON.parse(stdout)); } catch { resolve({ error: "parse error", raw: stdout }); }
+        } else {
+          reject(new Error(stderr || `ffprobe exited ${code}`));
+        }
+      });
+      proc.on("error", reject);
+    });
+  });
+
+  // --- video convert ---
   ipcMain.handle("ffmpeg:convertVideo", async (_e, opts) => {
     const args = buildVideoArgs(opts.inputPath, opts.outputPath, opts.format, opts.params);
     const onData = (line: string) => {
@@ -59,6 +87,7 @@ export function registerFfmpegHandlers() {
     return opts.outputPath;
   });
 
+  // --- audio convert ---
   ipcMain.handle("ffmpeg:convertAudio", async (_e, opts) => {
     const args = ["-y", "-i", opts.inputPath];
     if (opts.params?.bitrate) args.push("-b:a", String(opts.params.bitrate));
@@ -74,23 +103,46 @@ export function registerFfmpegHandlers() {
     return opts.outputPath;
   });
 
+  // --- video to gif ---
   ipcMain.handle("ffmpeg:convertVideoToGif", async (_e, opts) => {
-    const args = ["-y", "-i", opts.inputPath];
-    if (opts.params?.fps) args.push("-r", String(opts.params.fps));
-    if (opts.params?.resolution) args.push("-vf", `fps=${opts.params.fps ?? 10},scale=${opts.params.resolution ?? "480:-1"}:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse`);
-    args.push(opts.outputPath);
+    const fps = opts.params?.fps ?? 10;
+    const resolution = opts.params?.resolution ?? "480:-1";
+    const args = [
+      "-y", "-i", opts.inputPath,
+      "-vf", `fps=${fps},scale=${resolution}:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse`,
+      opts.outputPath,
+    ];
     await runFfmpeg(args);
     return opts.outputPath;
   });
 
+  // --- extract audio ---
   ipcMain.handle("ffmpeg:extractAudio", async (_e, opts) => {
     const args = ["-y", "-i", opts.inputPath, "-vn"];
     if (opts.params?.bitrate) args.push("-b:a", String(opts.params.bitrate));
+    if (opts.params?.sampleRate) args.push("-ar", String(opts.params.sampleRate));
+    args.push(opts.outputPath);
+    const onData = (line: string) => {
+      const progress = parseFfmpegProgress(line);
+      if (progress) sendProgress(null, { ...progress, raw: line });
+    };
+    await runFfmpeg(args, onData);
+    return opts.outputPath;
+  });
+
+  // --- extract frame (screenshot) ---
+  ipcMain.handle("ffmpeg:extractFrame", async (_e, opts) => {
+    const args = ["-y", "-i", opts.inputPath];
+    if (opts.params?.time) args.push("-ss", String(opts.params.time));
+    else args.push("-ss", "00:00:01");
+    args.push("-vframes", "1");
+    if (opts.params?.resolution) args.push("-vf", `scale=${opts.params.resolution}`);
     args.push(opts.outputPath);
     await runFfmpeg(args);
     return opts.outputPath;
   });
 
+  // --- compress video ---
   ipcMain.handle("ffmpeg:compressVideo", async (_e, opts) => {
     const args = ["-y", "-i", opts.inputPath];
     if (opts.params?.crf) args.push("-crf", String(opts.params.crf));
@@ -107,6 +159,7 @@ export function registerFfmpegHandlers() {
     return opts.outputPath;
   });
 
+  // --- trim video ---
   ipcMain.handle("ffmpeg:trimVideo", async (_e, opts) => {
     const args = ["-y", "-i", opts.inputPath];
     if (opts.params?.start) args.push("-ss", String(opts.params.start));
@@ -116,6 +169,17 @@ export function registerFfmpegHandlers() {
     return opts.outputPath;
   });
 
+  // --- trim audio ---
+  ipcMain.handle("ffmpeg:trimAudio", async (_e, opts) => {
+    const args = ["-y", "-i", opts.inputPath];
+    if (opts.params?.start) args.push("-ss", String(opts.params.start));
+    if (opts.params?.end) args.push("-to", String(opts.params.end));
+    args.push("-vn", "-c", "copy", opts.outputPath);
+    await runFfmpeg(args);
+    return opts.outputPath;
+  });
+
+  // --- audio merge ---
   ipcMain.handle("ffmpeg:audioMerge", async (_e, opts) => {
     const listContent = opts.inputPaths.map((p: string) => `file '${p.replace(/\\/g, "/")}'`).join("\n");
     const tmpDir = require("os").tmpdir();
@@ -127,6 +191,7 @@ export function registerFfmpegHandlers() {
     return opts.outputPath;
   });
 
+  // --- image convert ---
   ipcMain.handle("ffmpeg:convertImage", async (_e, opts) => {
     const args = ["-y", "-i", opts.inputPath];
     if (opts.params?.quality) args.push("-q:v", String(Math.round((100 - Number(opts.params.quality)) / 100 * 31)));

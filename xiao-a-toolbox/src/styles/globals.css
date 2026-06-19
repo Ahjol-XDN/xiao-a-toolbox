@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 :root {
   --accent: #60cdff;
@@ -19,8 +19,22 @@
   --sidebar-accent: #0078d4;
 }
 
+[data-theme="dark"] {
+  --bg-primary: #202020;
+  --bg-secondary: #2b2b2b;
+  --bg-card: #2d2d2d;
+  --text-primary: #ffffff;
+  --text-secondary: #ababab;
+  --text-tertiary: #6e6e6e;
+  --border: #3d3d3d;
+  --border-subtle: #353535;
+  --sidebar-bg: #282828;
+  --sidebar-hover: #333333;
+  --sidebar-active: #383838;
+}
+
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg-primary: #202020;
     --bg-secondary: #2b2b2b;
     --bg-card: #2d2d2d;

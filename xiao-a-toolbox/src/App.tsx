@@ -1,6 +1,7 @@
-import { Routes, Route } from "react-router-dom";
+﻿import { Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Video from "./pages/Video";
+import VideoToAudio from "./pages/VideoToAudio";
 import Audio from "./pages/Audio";
 import Document from "./pages/Document";
 import Image from "./pages/Image";
@@ -14,6 +15,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Video />} />
         <Route path="/video" element={<Video />} />
+        <Route path="/video-to-audio" element={<VideoToAudio />} />
         <Route path="/audio" element={<Audio />} />
         <Route path="/document" element={<Document />} />
         <Route path="/image" element={<Image />} />
