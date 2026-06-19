@@ -1,0 +1,61 @@
+﻿name: Build & Release
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: xiao-a-toolbox/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: xiao-a-toolbox
+
+      - name: Build & Package
+        run: npm run build
+        working-directory: xiao-a-toolbox
+
+      - name: Generate zip artifact
+        run: |
+          7z a -tzip -mx9 "xiao-a-toolbox-portable.zip" ".\dist\win-unpacked\*"
+        working-directory: xiao-a-toolbox
+
+      - name: Extract changelog
+        id: changelog
+        shell: pwsh
+        run: |
+          $log = git log -1 --pretty=format:"%s%n%n%b"
+          "changelog<<EOF" >> $env:GITHUB_OUTPUT
+          $log >> $env:GITHUB_OUTPUT
+          "EOF" >> $env:GITHUB_OUTPUT
+
+      - name: Get version
+        id: version
+        shell: pwsh
+        run: |
+          $pkg = Get-Content .\xiao-a-toolbox\package.json | ConvertFrom-Json
+          "version=$($pkg.version)" >> $env:GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: "小A工具箱 v${{ steps.version.outputs.version }}"
+          body: ${{ steps.changelog.outputs.changelog }}
+          files: xiao-a-toolbox/xiao-a-toolbox-portable.zip
+          draft: false

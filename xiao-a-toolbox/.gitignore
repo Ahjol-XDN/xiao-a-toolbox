@@ -1,12 +1,50 @@
-node_modules/ 
-dist/ 
-dist-electron/ 
-engines/ 
-*.zip 
-dl.js 
-serve.js 
-rewrite*.js 
-*bom* 
-*pkg* 
-check.js 
+﻿# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+dist-electron/
+*.zip
+*.7z
+
+# Engines (large binaries, downloaded separately)
+engines/
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Vite
 .vite/
+
+# Temp & logs
+*.log
+npm-debug.log*
+tmp/
+temp/
+
+# Electron builder
+release/
+*.nsis.7z
+*.exe.blockmap
+
+# Scripts (dev tools)
+dl.js
+serve.js
+rewrite*.js
+*bom*
+*pkg*
+check.js
+
+# Environment
+.env
+.env.local
+.env.*.local
