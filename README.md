@@ -1,141 +1,103 @@
 ﻿# 小A万能转换工具箱 2.0
 
-> 基于 Electron + FFmpeg + Pandoc 的本地全能文件格式转换桌面应用
+> 一款完全本地运行的桌面文件格式转换工具，拖拽即用，隐私无忧。
 
-## ✨ 功能
+<p align="center">
+  <img src="xiao-a-toolbox/resources/icons/icon.png" width="128" alt="小A工具箱图标">
+</p>
 
-| 模块 | 能力 | 支持格式 |
-|------|------|---------|
-| 🎬 **视频转换** | 格式互转、压缩、裁剪、提取音频、GIF、截图 | MP4 / MKV / AVI / MOV / WebM / FLV |
-| 🎵 **视频转音频** | 视频文件批量提取音频 | → MP3 / AAC / WAV / FLAC / OGG / WMA |
-| 🎧 **音频转换** | 格式互转、多音频合并、裁剪 | MP3 / WAV / AAC / FLAC / OGG / WMA |
-| 📄 **文档转换** | Pandoc 驱动格式互转 | DOCX / PDF / MD / TXT / HTML / RTF / EPUB |
-| 🖼️ **图片转换** | 格式互转、质量/尺寸调整 | PNG / JPG / WebP / BMP / TIFF / ICO |
-| 📑 **PDF 工具** | 合并、拆分 | PDF |
-| 📦 **批量转换** | 统一格式批量处理混合文件 | 以上全部格式 |
+---
 
-### 特色
+## 这是什么？
 
-- **多文件拖拽** — 所有页面支持多文件批量处理
-- **全局默认目录** — 设置一次，所有转换自动保存
-- **拖拽排序** — 文件列表可直接拖拽调整顺序
-- **深色/浅色主题** — 亮色、暗色、跟随系统三模式
-- **快捷键** — `Ctrl+O` 选择文件 / `Ctrl+Enter` 开始转换 / `Esc` 取消
-- **文件信息预览** — 点击「查看详情」显示视频/音频元数据
-- **转换历史** — 自动记录每次转换，可在设置页查看
-- **系统通知** — 转换完成桌面弹窗提醒
-- **文件大小预估** — 转换前估算输出大小
-- **完全本地** — 所有处理离线完成，保护隐私
+**小A工具箱** 是一个 Windows 桌面软件，帮你轻松转换视频、音频、文档、图片和 PDF 的格式。不需要联网，不需要上传文件，所有处理都在你的电脑上完成。
 
-## 🚀 快速开始
+## 能做什么？
 
-### 环境要求
+### 🎬 视频处理
+拖入视频文件，可以：
+- **格式互转** — MP4 ↔ MKV ↔ AVI ↔ MOV ↔ WebM ↔ FLV
+- **视频压缩** — 调整码率、分辨率、CRF 质量，给视频瘦身
+- **视频裁剪** — 截取精彩片段
+- **提取音频** — 从视频中提取 MP3/AAC/WAV 等
+- **转 GIF** — 视频片段转动态表情包
+- **视频截图** — 指定时间点提取画面
 
-- Windows 10/11 x64
-- [Node.js](https://nodejs.org) ≥ 18
-- 7-Zip（打包需要，[下载](https://7-zip.org)）
+### 🎵 视频转音频（独立入口）
+拖入多个视频，一键批量提取音频。支持 MP3 / AAC / WAV / FLAC / OGG / WMA，可调码率和采样率。
 
-### 开发运行
+### 🎧 音频处理
+- **格式互转** — MP3 / WAV / AAC / FLAC / OGG / WMA
+- **多音频合并** — 拖拽多个音频按序拼接
+- **音频裁剪** — 截取高潮部分
 
-```powershell
-cd xiao-a-toolbox
-npm install
-npm run dev
-```
+### 📄 文档转换
+Word 转 PDF、Markdown 转 HTML、TXT 转 DOCX…… 支持 DOCX / PDF / MD / TXT / HTML / RTF / EPUB 互转。
 
-### 打包发布
+### 🖼️ 图片转换
+PNG ↔ JPG ↔ WebP ↔ BMP ↔ TIFF ↔ ICO，可调质量和尺寸。
 
-```powershell
-# 完整版（~300MB，含所有引擎）
-.\build-portable.ps1
+### 📑 PDF 工具
+- **合并** — 多份 PDF 按顺序合成一份
+- **拆分** — 按页码范围拆成多个文件
 
-# 精简版（~80MB，仅音视频 + 图片）
-.\build-portable.ps1 -Slim
+### 📦 批量转换
+拖入一堆不同类型的文件，统一转换成同一种格式，一键搞定。
 
-# 清理缓存后打包
-.\build-portable.ps1 -Clean
-```
+---
 
-输出在 `dist/` 目录下，解压即用。
+## 为什么选它？
 
-### 一键 Git 推送
+| 特点 | 说明 |
+|------|------|
+| 🔒 **完全本地** | 文件不离开你的电脑，无需联网 |
+| 🖱️ **拖拽即用** | 拖文件进去，设格式，点按钮 |
+| 📂 **多文件支持** | 所有页面都能同时处理多个文件 |
+| 🎨 **深色/浅色主题** | 亮色、暗色、跟随系统，随时切换 |
+| 📊 **文件信息预览** | 转换前查看分辨率、码率、时长 |
+| 📐 **大小预估** | 转换前估算输出文件大小 |
+| ⌨️ **快捷键** | `Ctrl+O` 选文件，`Ctrl+Enter` 开始，`Esc` 取消 |
+| 📝 **转换历史** | 自动记录，方便回溯 |
+| 🔔 **完成通知** | 转换完了弹窗告诉你 |
 
-```powershell
-.\init-git.ps1 "feat: 新增xxx功能"
-```
+---
 
-## 🏗️ 技术栈
+## 怎么用？
 
-| 层 | 技术 |
-|---|---|
-| 桌面框架 | Electron 35 |
-| 前端 | React 19 + TypeScript + Vite + Tailwind CSS |
-| 路由 | React Router v7 |
-| UI 组件 | Radix UI |
-| 音视频引擎 | FFmpeg (ffmpeg + ffprobe) |
-| 文档引擎 | Pandoc |
-| PDF 处理 | pdf-lib |
-| 打包 | electron-builder (portable) |
-| CI/CD | GitHub Actions |
+### 下载
 
-## 📁 项目结构
+从 [Releases](../../releases) 页面下载最新版 `xiao-a-toolbox-*-portable.zip`，解压后双击 `xiao-a-toolbox.exe` 运行。
 
-```
-xiao-a-toolbox/
-├── electron/           # Electron 主进程
-│   ├── main.ts         # 入口 + IPC 注册
-│   ├── preload.ts      # 安全的 API 桥接
-│   ├── engines.ts      # 引擎检测
-│   ├── utils.ts        # 工具函数
-│   └── ipc/            # IPC 处理器
-│       ├── ffmpeg.ts   # 音视频/图片转换
-│       ├── pandoc.ts   # 文档转换
-│       ├── pdf.ts      # PDF 操作
-│       └── batch.ts    # 批量转换
-├── src/                # 渲染进程
-│   ├── pages/          # 页面组件
-│   │   ├── Video.tsx       # 视频转换
-│   │   ├── VideoToAudio.tsx # 视频转音频
-│   │   ├── Audio.tsx       # 音频转换
-│   │   ├── Document.tsx    # 文档转换
-│   │   ├── Image.tsx       # 图片转换
-│   │   ├── PDF.tsx         # PDF 工具
-│   │   ├── Batch.tsx       # 批量转换
-│   │   └── Settings.tsx    # 设置
-│   ├── components/     # 通用组件
-│   │   ├── DropZone.tsx      # 拖拽区域
-│   │   ├── FileList.tsx      # 文件列表（可拖拽排序）
-│   │   ├── FormatSelector.tsx # 格式选择器
-│   │   ├── ProgressPanel.tsx  # 进度面板
-│   │   ├── MediaInfo.tsx      # 文件信息预览
-│   │   ├── EstimateSize.tsx   # 大小预估
-│   │   ├── Layout.tsx         # 侧边栏布局
-│   │   └── PresetManager.tsx  # 预设管理
-│   ├── hooks/          # React Hooks
-│   │   ├── useFiles.ts       # 文件管理
-│   │   ├── useIPC.ts         # IPC 调用
-│   │   └── useKeyboard.tsx   # 快捷键
-│   └── styles/         # 样式
-├── engines/            # 引擎二进制（须自行下载）
-│   ├── ffmpeg/
-│   └── pandoc/
-├── resources/          # 打包资源
-│   └── icons/
-├── build-portable.ps1  # 打包脚本
-└── electron-builder.yml # 打包配置
-```
+> 精简版（~80MB）：音视频 + 图片处理  
+> 完整版（~300MB）：包含文档转换（Pandoc 引擎）
 
-## 📝 提交规范
+### 使用步骤
 
-| 前缀 | 用途 |
-|---|---|
-| `feat` | 新功能 |
-| `fix` | 修复 Bug |
-| `build` | 打包/构建脚本 |
-| `docs` | 文档更新 |
-| `perf` | 性能优化 |
-| `chore` | 杂项维护 |
+1. 左侧选择功能模块
+2. 拖拽文件到虚线框，或点击选择
+3. 选择输出格式和参数
+4. 点击「开始转换」
+5. 等着，完成！
 
-## 📄 License
+### 设置默认保存目录
 
-MIT
+在「设置」页设一个默认输出目录，之后转换就不用每次选保存位置了。
+
+---
+
+## 截图
+
+> 运行 `npm run dev` 启动后截图放在 `screenshots/` 目录下
+
+---
+
+## 环境要求
+
+- Windows 10 / 11 64 位
+- 不需要安装任何运行环境，解压即用
+
+---
+
+## License
+
+MIT — 自由使用、修改、分发。
