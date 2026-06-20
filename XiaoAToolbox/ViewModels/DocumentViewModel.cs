@@ -10,12 +10,13 @@ namespace XiaoAToolbox.ViewModels;
 public class DocumentViewModel : ObservableObject
 {
     private readonly PandocService _pandoc = new();
+    private readonly NativeDocService _native = new();
     private readonly ConfigService _config = new();
     private readonly HistoryService _history = new();
 
     public ObservableCollection<FileItem> Files { get; } = new();
 
-    private string _format = "pdf";
+    private string _format = "html";
     public string Format { get => _format; set => SetProperty(ref _format, value); }
 
     private bool _includeToc;
@@ -30,7 +31,7 @@ public class DocumentViewModel : ObservableObject
     private string _progressText = "";
     public string ProgressText { get => _progressText; set => SetProperty(ref _progressText, value); }
 
-    public bool Inactive => !EngineService.PandocAvailable || (!Running && Files.Count == 0);
+    public bool Inactive => !Running && Files.Count == 0;
 
     private string _outputDir = "";
     public string OutputDir { get => _outputDir; set => SetProperty(ref _outputDir, value); }
@@ -39,6 +40,8 @@ public class DocumentViewModel : ObservableObject
     public ICommand ClearFilesCommand { get; }
     public ICommand StartCommand { get; }
     public ICommand BrowseOutputCommand { get; }
+
+    public bool HasPandoc => EngineService.PandocAvailable;
 
     public DocumentViewModel()
     {
@@ -59,7 +62,7 @@ public class DocumentViewModel : ObservableObject
 
     public void AddFiles()
     {
-        var dlg = new OpenFileDialog { Multiselect = true, Title = "选择文档", Filter = "文档文件|*.docx;*.md;*.txt;*.html;*.rtf;*.epub;*.tex|所有文件|*.*" };
+        var dlg = new OpenFileDialog { Multiselect = true, Title = "选择文档", Filter = "文档|*.docx;*.md;*.txt;*.html;*.rtf;*.epub;*.tex|全部|*.*" };
         if (dlg.ShowDialog() == true)
             foreach (var f in dlg.FileNames) AddFile(f);
     }
@@ -84,7 +87,16 @@ public class DocumentViewModel : ObservableObject
                 var file = Files[i];
                 ProgressText = $"转换中... ({i + 1}/{Files.Count})";
                 var output = Path.Combine(outDir, Path.GetFileNameWithoutExtension(file.Path) + $".{Format}");
-                await _pandoc.ConvertDocumentAsync(file.Path, output, IncludeToc);
+
+                if (EngineService.PandocAvailable)
+                {
+                    await _pandoc.ConvertDocumentAsync(file.Path, output, IncludeToc);
+                }
+                else
+                {
+                    await _native.ConvertAsync(file.Path, output);
+                }
+
                 _history.Add(new HistoryEntry { Timestamp = DateTime.Now, InputFile = file.Path, OutputFile = output, Operation = "document", Format = Format, Success = true });
                 Progress = (i + 1) * 100 / Files.Count;
             }
