@@ -1,30 +1,34 @@
-using System.IO.Compression;
-
 namespace XiaoAToolbox.Services;
 
 public class EngineService
 {
-    private static readonly string AppEngineDir = Path.Combine(
-        AppDomain.CurrentDomain.BaseDirectory, "engines");
-    private static readonly string UserEngineDir = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "XiaoAToolbox", "engines");
+    private static readonly string[] SearchDirs = new[]
+    {
+        AppDomain.CurrentDomain.BaseDirectory,
+        Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "engines", "ffmpeg", "bin"),
+        Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "engines", "pandoc"),
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "XiaoAToolbox", "engines", "ffmpeg", "bin"),
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "XiaoAToolbox", "engines", "pandoc"),
+    };
 
     public static string? FfmpegPath { get; private set; }
     public static string? FfprobePath { get; private set; }
     public static string? PandocPath { get; private set; }
+    public static string? WkhtmltopdfPath { get; private set; }
     public static bool FfmpegAvailable { get; private set; }
     public static bool PandocAvailable { get; private set; }
+    public static bool PdfEngineAvailable { get; private set; }
 
     public static void DetectEngines()
     {
-        // Check multiple locations
-        foreach (var baseDir in new[] { AppEngineDir, UserEngineDir })
+        foreach (var dir in SearchDirs)
         {
-            var ffmpegDir = Path.Combine(baseDir, "ffmpeg", "bin");
-            var ffmpegExe = Path.Combine(ffmpegDir, "ffmpeg.exe");
-            var ffprobeExe = Path.Combine(ffmpegDir, "ffprobe.exe");
-            var pandocExe = Path.Combine(baseDir, "pandoc", "pandoc.exe");
+            var ffmpegExe = Path.Combine(dir, "ffmpeg.exe");
+            var ffprobeExe = Path.Combine(dir, "ffprobe.exe");
+            var pandocExe = Path.Combine(dir, "pandoc.exe");
+            var wkExe = Path.Combine(dir, "wkhtmltopdf.exe");
 
             if (!FfmpegAvailable && File.Exists(ffmpegExe))
             {
@@ -37,6 +41,12 @@ public class EngineService
             {
                 PandocPath = pandocExe;
                 PandocAvailable = true;
+            }
+
+            if (!PdfEngineAvailable && File.Exists(wkExe))
+            {
+                WkhtmltopdfPath = wkExe;
+                PdfEngineAvailable = true;
             }
         }
     }

@@ -23,12 +23,9 @@ public class PandocService
             "--standalone"
         };
 
-        // Use wkhtmltopdf if available, otherwise try pdflatex
-        if (ext == ".pdf")
+        if (ext == ".pdf" && EngineService.PdfEngineAvailable && EngineService.WkhtmltopdfPath != null)
         {
-            var pdfEngine = GetPdfEngine();
-            if (pdfEngine != null)
-                args.AddRange(new[] { "--pdf-engine", pdfEngine });
+            args.AddRange(new[] { "--pdf-engine", EngineService.WkhtmltopdfPath });
         }
 
         if (includeToc) args.Add("--toc");
@@ -54,33 +51,11 @@ public class PandocService
         var stderr = await stderrTask;
 
         if (process.ExitCode == 47 && ext == ".pdf")
-            throw new Exception("PDF output needs pdflatex or wkhtmltopdf.\nDownload wkhtmltopdf: https://wkhtmltopdf.org");
+            throw new Exception("PDF needs wkhtmltopdf.\nDownload: https://wkhtmltopdf.org\nPut wkhtmltopdf.exe next to XiaoAToolbox.exe");
 
         if (process.ExitCode != 0)
             throw new Exception($"Pandoc error (code {process.ExitCode}): {stderr}");
 
         return outputPath;
-    }
-
-    private static string? GetPdfEngine()
-    {
-        // Check for wkhtmltopdf next to pandoc
-        var wkPath = Path.Combine(
-            Path.GetDirectoryName(EngineService.PandocPath) ?? "",
-            "wkhtmltopdf.exe");
-        if (File.Exists(wkPath)) return wkPath;
-
-        // Check for pdflatex in PATH
-        try
-        {
-            var psi = new ProcessStartInfo { FileName = "where", Arguments = "pdflatex",
-                UseShellExecute = false, RedirectStandardOutput = true, CreateNoWindow = true };
-            var p = Process.Start(psi);
-            p!.WaitForExit(500);
-            if (p.ExitCode == 0) return "pdflatex";
-        }
-        catch { }
-
-        return null;
     }
 }
