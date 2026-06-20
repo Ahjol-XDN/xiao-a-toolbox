@@ -1,8 +1,8 @@
-﻿name: Build & Release
+﻿name: Build & Release (WPF)
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -15,47 +15,88 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
         with:
-          node-version: 20
-          cache: npm
-          cache-dependency-path: xiao-a-toolbox/package-lock.json
-
-      - name: Install dependencies
-        run: npm ci
-        working-directory: xiao-a-toolbox
-
-      - name: Build & Package
-        run: npm run build
-        working-directory: xiao-a-toolbox
-
-      - name: Generate zip artifact
-        run: |
-          7z a -tzip -mx9 "xiao-a-toolbox-portable.zip" ".\dist\win-unpacked\*"
-        working-directory: xiao-a-toolbox
-
-      - name: Extract changelog
-        id: changelog
-        shell: pwsh
-        run: |
-          $log = git log -1 --pretty=format:"%s%n%n%b"
-          "changelog<<EOF" >> $env:GITHUB_OUTPUT
-          $log >> $env:GITHUB_OUTPUT
-          "EOF" >> $env:GITHUB_OUTPUT
+          dotnet-version: 8.0.x
 
       - name: Get version
         id: version
         shell: pwsh
         run: |
-          $pkg = Get-Content .\xiao-a-toolbox\package.json | ConvertFrom-Json
-          "version=$($pkg.version)" >> $env:GITHUB_OUTPUT
+          $csproj = [xml](Get-Content XiaoAToolbox\XiaoAToolbox.csproj)
+          $version = $csproj.Project.PropertyGroup.Version
+          Write-Output "APP_VERSION=$version"
+          "version=$version" >> $env:GITHUB_OUTPUT
+
+      - name: Restore NuGet
+        run: dotnet restore XiaoAToolbox\XiaoAToolbox.csproj
+
+      - name: Build
+        run: dotnet build XiaoAToolbox\XiaoAToolbox.csproj -c Release --no-restore
+
+      - name: Publish (framework-dependent)
+        run: |
+          dotnet publish XiaoAToolbox\XiaoAToolbox.csproj -c Release -o publish `
+            --self-contained false `
+            -p:PublishSingleFile=false `
+            -p:RuntimeIdentifier=win-x64 `
+            --no-restore
+
+      - name: Download FFmpeg
+        shell: pwsh
+        run: |
+          $url = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"
+          Invoke-WebRequest -Uri $url -OutFile ffmpeg.zip
+          7z x ffmpeg.zip -offmpeg_temp
+          $ffmpegDir = Get-ChildItem ffmpeg_temp -Directory | Select-Object -First 1
+          New-Item -ItemType Directory -Force -Path publish\engines\ffmpeg\bin | Out-Null
+          Copy-Item "$($ffmpegDir.FullName)\bin\ffmpeg.exe" publish\engines\ffmpeg\bin\
+          Copy-Item "$($ffmpegDir.FullName)\bin\ffprobe.exe" publish\engines\ffmpeg\bin\
+
+      - name: Download Pandoc
+        shell: pwsh
+        run: |
+          $url = "https://github.com/jgm/pandoc/releases/download/3.6.4/pandoc-3.6.4-windows-x86_64.zip"
+          Invoke-WebRequest -Uri $url -OutFile pandoc.zip
+          7z x pandoc.zip -opandoc_temp
+          $pandocDir = Get-ChildItem pandoc_temp -Directory | Select-Object -First 1
+          New-Item -ItemType Directory -Force -Path publish\engines\pandoc | Out-Null
+          Copy-Item "$($pandocDir.FullName)\pandoc.exe" publish\engines\pandoc\
+
+      - name: Package Release
+        shell: pwsh
+        run: |
+          $version = "${{ steps.version.outputs.version }}"
+          $zipName = "XiaoAToolbox-v$version-portable.zip"
+          7z a -tzip -mx9 $zipName ".\publish\*"
+          Write-Output "Created: $zipName"
+          $size = (Get-Item $zipName).Length / 1MB
+          Write-Output "Size: $([math]::Round($size,1)) MB"
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.version.outputs.version }}
           name: "小A工具箱 v${{ steps.version.outputs.version }}"
-          body: ${{ steps.changelog.outputs.changelog }}
-          files: xiao-a-toolbox/xiao-a-toolbox-portable.zip
+          body: |
+            ## 小A万能转换工具箱 v${{ steps.version.outputs.version }}
+
+            基于 .NET 8 WPF 原生构建，完全本地运行。
+
+            ### 使用方式
+            1. 确保已安装 [.NET 8 运行时](https://dotnet.microsoft.com/download/dotnet/8.0)
+            2. 解压 zip，右键 `install.ps1` → 使用 PowerShell 运行
+            3. 桌面会生成快捷方式
+
+            ### 功能
+            - 🎬 视频格式转换 / 压缩 / 裁剪 / 转 GIF / 截图
+            - 🎵 视频提取音频
+            - 🎧 音频转换 / 合并 / 裁剪
+            - 📄 文档转换 (DOCX/PDF/MD/HTML 等)
+            - 🖼️ 图片转换 (PNG/JPG/WebP 等)
+            - 📑 PDF 合并 / 拆分
+            - 📦 批量统一转换
+            - 🌐 中 / English 双语
+          files: XiaoAToolbox-v${{ steps.version.outputs.version }}-portable.zip
           draft: false

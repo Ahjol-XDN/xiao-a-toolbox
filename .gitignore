@@ -1,25 +1,36 @@
-﻿# NuGet local cache
+﻿
+# Binaries
+*.exe
+*.dll
+*.pdb
+*.so
+*.dylib
+
+# Publish output
+XiaoAToolbox/publish/
+XiaoAToolbox/publish-fd/
+
+# Build artifacts
+XiaoAToolbox/bin/
+XiaoAToolbox/obj/
+
+# NuGet local
 .nuget-packages/
 NuGet.Config
 
 # IDE
 .vs/
 .idea/
-
-# Build output
-XiaoAToolbox/bin/
-XiaoAToolbox/obj/
-XiaoAToolbox/publish/
-
-# Electron (old - kept for reference)
-xiao-a-toolbox/node_modules/
-xiao-a-toolbox/dist/
-xiao-a-toolbox/dist-electron/
+*.suo
+*.user
+*.DotSettings.user
 
 # OS
 Thumbs.db
+.DS_Store
 desktop.ini
 
-# Publish output (large files)
-XiaoAToolbox/publish-fd/
-XiaoAToolbox/publish/
+# Electron legacy (keep for reference)
+xiao-a-toolbox/node_modules/
+xiao-a-toolbox/dist/
+xiao-a-toolbox/dist-electron/
