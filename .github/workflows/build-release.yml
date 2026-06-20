@@ -1,4 +1,4 @@
-﻿name: Build & Release (WPF)
+name: Build & Release (WPF)
 
 on:
   push:
