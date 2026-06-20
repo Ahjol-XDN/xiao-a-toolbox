@@ -25,6 +25,10 @@
                 </StackPanel>
             </Border>
 
+            <!-- Status -->
+            <TextBlock Text="{Binding StatusText}" Foreground="{StaticResource TextSecondaryBrush}"
+                       FontSize="13" Margin="0,0,0,12" />
+
             <!-- File List -->
             <ItemsControl ItemsSource="{Binding Files}" Margin="0,0,0,16">
                 <ItemsControl.ItemTemplate>
@@ -54,10 +58,6 @@
             <Border BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="1"
                     CornerRadius="12" Padding="20" Background="{StaticResource BgCardBrush}" Margin="0,0,0,16">
                 <StackPanel>
-                    <!-- Status -->
-                    <TextBlock Text="{Binding StatusText}" Foreground="{StaticResource TextSecondaryBrush}"
-                               FontSize="13" Margin="0,0,0,12" />
-
                     <!-- Format Selector -->
                     <StackPanel Margin="0,0,0,16">
                         <TextBlock Text="Output Format" Foreground="{StaticResource TextSecondaryBrush}"
@@ -107,6 +107,17 @@
                     <ProgressBar Value="{Binding Progress}" Height="6" />
                 </StackPanel>
             </Border>
+
+            <!-- Results -->
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,12"
+                        Visibility="{Binding Running, Converter={StaticResource BoolToVis}, ConverterParameter=invert}">
+                <TextBlock Foreground="{StaticResource SuccessBrush}" FontSize="13">
+                    <Run Text="Success " /><Run Text="{Binding SuccessCount}" />
+                </TextBlock>
+                <TextBlock Margin="16,0,0,0" Foreground="{StaticResource ErrorBrush}" FontSize="13">
+                    <Run Text="Failed " /><Run Text="{Binding FailCount}" />
+                </TextBlock>
+            </StackPanel>
 
             <!-- Action Buttons -->
             <Grid>
