@@ -1,0 +1,28 @@
+﻿# .NET build output
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.csproj.user
+
+# NuGet
+.nuget-packages/
+NuGet.Config
+
+# VS / Rider
+.vs/
+.idea/
+*.DotSettings.user
+
+# Publish output
+publish/
+
+# OS files
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Engine binaries (large, bundled separately)
+Engines/ffmpeg/*.exe
+Engines/pandoc/*.exe

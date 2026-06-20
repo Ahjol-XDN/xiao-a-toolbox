@@ -1,0 +1,41 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Accent -->
+    <Color x:Key="AccentColor">#60cdff</Color>
+    <Color x:Key="AccentDarkColor">#0078d4</Color>
+    <Color x:Key="AccentLightColor">#1a3350</Color>
+    <!-- Backgrounds -->
+    <Color x:Key="BgPrimaryColor">#1e1e1e</Color>
+    <Color x:Key="BgSecondaryColor">#252525</Color>
+    <Color x:Key="BgCardColor">#2d2d2d</Color>
+    <Color x:Key="BgSubtleColor">#333333</Color>
+    <!-- Text -->
+    <Color x:Key="TextPrimaryColor">#e0e0e0</Color>
+    <Color x:Key="TextSecondaryColor">#a0a0a0</Color>
+    <Color x:Key="TextTertiaryColor">#666666</Color>
+    <!-- Borders -->
+    <Color x:Key="BorderColor">#404040</Color>
+    <Color x:Key="BorderSubtleColor">#333333</Color>
+    <!-- Shadows -->
+    <Color x:Key="ShadowColor">#3d000000</Color>
+    <!-- Specific -->
+    <Color x:Key="SuccessColor">#6ccb5f</Color>
+    <Color x:Key="ErrorColor">#f26b5b</Color>
+    <Color x:Key="SidebarBgColor">#1a1a1a</Color>
+
+    <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}" />
+    <SolidColorBrush x:Key="AccentDarkBrush" Color="{StaticResource AccentDarkColor}" />
+    <SolidColorBrush x:Key="AccentLightBrush" Color="{StaticResource AccentLightColor}" />
+    <SolidColorBrush x:Key="BgPrimaryBrush" Color="{StaticResource BgPrimaryColor}" />
+    <SolidColorBrush x:Key="BgSecondaryBrush" Color="{StaticResource BgSecondaryColor}" />
+    <SolidColorBrush x:Key="BgCardBrush" Color="{StaticResource BgCardColor}" />
+    <SolidColorBrush x:Key="BgSubtleBrush" Color="{StaticResource BgSubtleColor}" />
+    <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimaryColor}" />
+    <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource TextSecondaryColor}" />
+    <SolidColorBrush x:Key="TextTertiaryBrush" Color="{StaticResource TextTertiaryColor}" />
+    <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}" />
+    <SolidColorBrush x:Key="BorderSubtleBrush" Color="{StaticResource BorderSubtleColor}" />
+    <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource SuccessColor}" />
+    <SolidColorBrush x:Key="ErrorBrush" Color="{StaticResource ErrorColor}" />
+    <SolidColorBrush x:Key="SidebarBgBrush" Color="{StaticResource SidebarBgColor}" />
+</ResourceDictionary>

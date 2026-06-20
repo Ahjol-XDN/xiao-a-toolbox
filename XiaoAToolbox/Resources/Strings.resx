@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="AppTitle" xml:space="preserve"><value>小A万能转换工具箱 3.0</value></data>
+  <data name="NavVideo" xml:space="preserve"><value>视频处理</value></data>
+  <data name="NavVideoToAudio" xml:space="preserve"><value>视频转音频</value></data>
+  <data name="NavAudio" xml:space="preserve"><value>音频处理</value></data>
+  <data name="NavDocument" xml:space="preserve"><value>文档转换</value></data>
+  <data name="NavImage" xml:space="preserve"><value>图片转换</value></data>
+  <data name="NavPdf" xml:space="preserve"><value>PDF工具</value></data>
+  <data name="NavBatch" xml:space="preserve"><value>批量转换</value></data>
+  <data name="NavSettings" xml:space="preserve"><value>设置</value></data>
+  <data name="DropHint" xml:space="preserve"><value>释放文件以添加</value></data>
+  <data name="DropOrClick" xml:space="preserve"><value>拖拽文件到此处，或点击选择</value></data>
+  <data name="SelectFiles" xml:space="preserve"><value>选择文件</value></data>
+  <data name="ClearFiles" xml:space="preserve"><value>清空</value></data>
+  <data name="OutputFormat" xml:space="preserve"><value>输出格式</value></data>
+  <data name="Bitrate" xml:space="preserve"><value>码率</value></data>
+  <data name="SampleRate" xml:space="preserve"><value>采样率</value></data>
+  <data name="Resolution" xml:space="preserve"><value>分辨率</value></data>
+  <data name="Quality" xml:space="preserve"><value>质量</value></data>
+  <data name="Codec" xml:space="preserve"><value>编码器</value></data>
+  <data name="CRF" xml:space="preserve"><value>CRF质量</value></data>
+  <data name="FPS" xml:space="preserve"><value>帧率</value></data>
+  <data name="StartTime" xml:space="preserve"><value>开始时间</value></data>
+  <data name="EndTime" xml:space="preserve"><value>结束时间</value></data>
+  <data name="Mode" xml:space="preserve"><value>模式</value></data>
+  <data name="ModeConvert" xml:space="preserve"><value>格式转换</value></data>
+  <data name="ModeCompress" xml:space="preserve"><value>视频压缩</value></data>
+  <data name="ModeTrim" xml:space="preserve"><value>视频裁剪</value></data>
+  <data name="ModeExtractAudio" xml:space="preserve"><value>提取音频</value></data>
+  <data name="ModeGif" xml:space="preserve"><value>转GIF</value></data>
+  <data name="ModeScreenshot" xml:space="preserve"><value>视频截图</value></data>
+  <data name="StartConvert" xml:space="preserve"><value>开始转换</value></data>
+  <data name="Converting" xml:space="preserve"><value>转换中...</value></data>
+  <data name="Success" xml:space="preserve"><value>成功</value></data>
+  <data name="Failed" xml:space="preserve"><value>失败</value></data>
+  <data name="OutputDir" xml:space="preserve"><value>输出目录</value></data>
+  <data name="Browse" xml:space="preserve"><value>浏览...</value></data>
+  <data name="Theme" xml:space="preserve"><value>主题</value></data>
+  <data name="ThemeAuto" xml:space="preserve"><value>跟随系统</value></data>
+  <data name="ThemeLight" xml:space="preserve"><value>浅色</value></data>
+  <data name="ThemeDark" xml:space="preserve"><value>深色</value></data>
+  <data name="Language" xml:space="preserve"><value>语言</value></data>
+  <data name="LangChinese" xml:space="preserve"><value>中文</value></data>
+  <data name="LangEnglish" xml:space="preserve"><value>English</value></data>
+  <data name="DefaultOutputDir" xml:space="preserve"><value>默认输出目录</value></data>
+  <data name="FileCount" xml:space="preserve"><value>已添加 {0} 个文件</value></data>
+  <data name="NoFiles" xml:space="preserve"><value>请先添加文件</value></data>
+  <data name="NoOutput" xml:space="preserve"><value>请先选择输出格式</value></data>
+  <data name="NoEngine" xml:space="preserve"><value>引擎未安装</value></data>
+  <data name="EstimatedSize" xml:space="preserve"><value>预估大小</value></data>
+  <data name="FileInfo" xml:space="preserve"><value>文件信息</value></data>
+  <data name="Duration" xml:space="preserve"><value>时长</value></data>
+  <data name="History" xml:space="preserve"><value>转换历史</value></data>
+  <data name="ClearHistory" xml:space="preserve"><value>清空历史</value></data>
+  <data name="NoHistory" xml:space="preserve"><value>暂无转换记录</value></data>
+  <data name="Complete" xml:space="preserve"><value>转换完成</value></data>
+  <data name="CompleteMsg" xml:space="preserve"><value>成功 {0} 个，失败 {1} 个</value></data>
+  <data name="Cancel" xml:space="preserve"><value>取消</value></data>
+  <data name="ToGif" xml:space="preserve"><value>GIF 设置</value></data>
+  <data name="ToScreenshot" xml:space="preserve"><value>截图设置</value></data>
+  <data name="ScreenshotTime" xml:space="preserve"><value>截图时间点</value></data>
+  <data name="PdfMerge" xml:space="preserve"><value>PDF 合并</value></data>
+  <data name="PdfSplit" xml:space="preserve"><value>PDF 拆分</value></data>
+  <data name="PageRanges" xml:space="preserve"><value>页码范围（逗号分隔，如: 1-3,5-7）</value></data>
+  <data name="AudioMerge" xml:space="preserve"><value>音频合并</value></data>
+  <data name="AudioTrim" xml:space="preserve"><value>音频裁剪</value></data>
+  <data name="TocInclude" xml:space="preserve"><value>包含目录</value></data>
+  <data name="ImageSize" xml:space="preserve"><value>图片尺寸</value></data>
+  <data name="NotifyComplete" xml:space="preserve"><value>完成时通知</value></data>
+  <data name="Settings" xml:space="preserve"><value>设置</value></data>
+  <data name="About" xml:space="preserve"><value>关于</value></data>
+  <data name="AboutText" xml:space="preserve"><value>小A万能转换工具箱 3.0
+完全本地运行的文件格式转换工具
+基于 .NET 8 WPF 构建</value></data>
+</root>
