@@ -47,9 +47,9 @@ public class DocumentViewModel : ObservableObject
     public ICommand BrowseOutputCommand { get; }
 
     public string StatusText =>
-        Files.Count == 0 ? "Please add document files" :
-        !EngineService.PandocAvailable ? "Pandoc engine not found" :
-        $"Added {Files.Count} file(s), click Start Convert";
+        Files.Count == 0 ? "请添加文档文件" :
+        !EngineService.PandocAvailable ? "Pandoc 引擎未找到" :
+        $"已添加 {Files.Count} 个文件，点击开始转换";
 
     public DocumentViewModel()
     {
@@ -78,8 +78,8 @@ public class DocumentViewModel : ObservableObject
         var dlg = new OpenFileDialog
         {
             Multiselect = true,
-            Title = "Select Documents",
-            Filter = "Documents|*.docx;*.md;*.txt;*.html;*.rtf;*.epub;*.tex|All Files|*.*"
+            Title = "选择文档",
+            Filter = "文档|*.docx;*.md;*.txt;*.html;*.rtf;*.epub;*.tex|所有文件|*.*"
         };
         if (dlg.ShowDialog() == true)
             foreach (var f in dlg.FileNames) AddFile(f);
@@ -97,7 +97,7 @@ public class DocumentViewModel : ObservableObject
 
     private void BrowseOutput()
     {
-        var dlg = new OpenFolderDialog { Title = "Select Output Directory" };
+        var dlg = new OpenFolderDialog { Title = "选择输出目录" };
         if (dlg.ShowDialog() == true) OutputDir = dlg.FolderName;
     }
 
@@ -105,13 +105,13 @@ public class DocumentViewModel : ObservableObject
     {
         if (Files.Count == 0)
         {
-            MessageBox.Show("Please add files first.", "Tip", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("请先添加文件。", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
             return;
         }
         if (!EngineService.PandocAvailable)
         {
-            MessageBox.Show("Pandoc engine not found.\nPlease place pandoc.exe in the app directory.",
-                "Engine Missing", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show("未找到 Pandoc 引擎。\n请将 pandoc.exe 放到程序目录下。",
+                "引擎缺失", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
@@ -129,7 +129,7 @@ public class DocumentViewModel : ObservableObject
             for (int i = 0; i < Files.Count; i++)
             {
                 var file = Files[i];
-                ProgressText = $"Converting... ({i + 1}/{Files.Count})";
+                ProgressText = $"转换中... ({i + 1}/{Files.Count})";
                 var output = Path.Combine(outDir,
                     Path.GetFileNameWithoutExtension(file.Path) + $".{Format}");
 
@@ -166,16 +166,16 @@ public class DocumentViewModel : ObservableObject
             }
 
             Progress = 100;
-            ProgressText = "Conversion complete";
+            ProgressText = "转换完成";
             MessageBox.Show(
-                $"Conversion complete!\n\nSuccess: {SuccessCount}\nFailed: {FailCount}",
-                "Document Conversion",
+                $"转换完成！\n\n成功: {SuccessCount} 个\n失败: {FailCount} 个",
+                "文档转换",
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(ex.Message, "错误", MessageBoxButton.OK, MessageBoxImage.Error);
         }
         finally
         {

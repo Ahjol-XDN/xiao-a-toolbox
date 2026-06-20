@@ -7,15 +7,15 @@
     </UserControl.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="24">
-            <!-- Drop Zone -->
+            <!-- 拖放区域 -->
             <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="2" CornerRadius="12"
                     Background="{StaticResource BgSubtleBrush}" Padding="32" Margin="0,0,0,16"
                     AllowDrop="True" Drop="OnDrop">
                 <StackPanel HorizontalAlignment="Center">
-                    <TextBlock Text="Drag document files here, or click to select"
+                    <TextBlock Text="拖放文档文件到此处，或点击选择"
                                Foreground="{StaticResource TextSecondaryBrush}"
                                FontSize="14" HorizontalAlignment="Center" Margin="0,0,0,8" />
-                    <Button Content="Select Files" Command="{Binding AddFilesCommand}"
+                    <Button Content="选择文件" Command="{Binding AddFilesCommand}"
                             Background="{StaticResource AccentBrush}" Foreground="White"
                             BorderThickness="0" Padding="16,8" HorizontalAlignment="Center">
                         <Button.Resources>
@@ -25,11 +25,11 @@
                 </StackPanel>
             </Border>
 
-            <!-- Status -->
+            <!-- 状态提示 -->
             <TextBlock Text="{Binding StatusText}" Foreground="{StaticResource TextSecondaryBrush}"
                        FontSize="13" Margin="0,0,0,12" />
 
-            <!-- File List -->
+            <!-- 文件列表 -->
             <ItemsControl ItemsSource="{Binding Files}" Margin="0,0,0,16">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
@@ -54,13 +54,13 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
 
-            <!-- Params Area -->
+            <!-- 参数区域 -->
             <Border BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="1"
                     CornerRadius="12" Padding="20" Background="{StaticResource BgCardBrush}" Margin="0,0,0,16">
                 <StackPanel>
-                    <!-- Format Selector -->
+                    <!-- 输出格式 -->
                     <StackPanel Margin="0,0,0,16">
-                        <TextBlock Text="Output Format" Foreground="{StaticResource TextSecondaryBrush}"
+                        <TextBlock Text="输出格式" Foreground="{StaticResource TextSecondaryBrush}"
                                    FontSize="12" Margin="0,0,0,6" />
                         <ComboBox Text="{Binding Format}" Padding="8,6"
                                   Background="{StaticResource BgSecondaryBrush}" BorderBrush="{StaticResource BorderBrush}">
@@ -74,10 +74,10 @@
                         </ComboBox>
                     </StackPanel>
 
-                    <CheckBox Content="Include Table of Contents" IsChecked="{Binding IncludeToc}"
+                    <CheckBox Content="包含目录" IsChecked="{Binding IncludeToc}"
                               Margin="0,0,0,12" Foreground="{StaticResource TextPrimaryBrush}" />
 
-                    <!-- Output Dir -->
+                    <!-- 输出目录 -->
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -86,7 +86,7 @@
                         <TextBox Text="{Binding OutputDir}" Padding="8,6"
                                  Background="{StaticResource BgSecondaryBrush}" BorderBrush="{StaticResource BorderBrush}"
                                  IsReadOnly="True" />
-                        <Button Grid.Column="1" Content="Browse..." Command="{Binding BrowseOutputCommand}"
+                        <Button Grid.Column="1" Content="浏览..." Command="{Binding BrowseOutputCommand}"
                                 Padding="12,6" Margin="8,0,0,0" Background="{StaticResource BgSecondaryBrush}"
                                 BorderBrush="{StaticResource BorderBrush}" Foreground="{StaticResource TextPrimaryBrush}">
                             <Button.Resources>
@@ -97,7 +97,7 @@
                 </StackPanel>
             </Border>
 
-            <!-- Progress -->
+            <!-- 进度条 -->
             <Border Visibility="{Binding Running, Converter={StaticResource BoolToVis}}"
                     BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="1"
                     CornerRadius="8" Padding="12" Margin="0,0,0,12" Background="{StaticResource BgCardBrush}">
@@ -108,32 +108,32 @@
                 </StackPanel>
             </Border>
 
-            <!-- Results -->
+            <!-- 结果统计 -->
             <StackPanel Orientation="Horizontal" Margin="0,0,0,12"
                         Visibility="{Binding Running, Converter={StaticResource BoolToVis}, ConverterParameter=invert}">
                 <TextBlock Foreground="{StaticResource SuccessBrush}" FontSize="13">
-                    <Run Text="Success " /><Run Text="{Binding SuccessCount}" />
+                    <Run Text="成功 " /><Run Text="{Binding SuccessCount}" /><Run Text=" 个" />
                 </TextBlock>
                 <TextBlock Margin="16,0,0,0" Foreground="{StaticResource ErrorBrush}" FontSize="13">
-                    <Run Text="Failed " /><Run Text="{Binding FailCount}" />
+                    <Run Text="失败 " /><Run Text="{Binding FailCount}" /><Run Text=" 个" />
                 </TextBlock>
             </StackPanel>
 
-            <!-- Action Buttons -->
+            <!-- 操作按钮 -->
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="12" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Button Content="Start Convert" Command="{Binding StartCommand}"
+                <Button Content="开始转换" Command="{Binding StartCommand}"
                         Background="{StaticResource AccentDarkBrush}" Foreground="White"
                         BorderThickness="0" Padding="0,12">
                     <Button.Resources>
                         <Style TargetType="Border"><Setter Property="CornerRadius" Value="10" /></Style>
                     </Button.Resources>
                 </Button>
-                <Button Grid.Column="2" Content="Clear" Command="{Binding ClearFilesCommand}"
+                <Button Grid.Column="2" Content="清空" Command="{Binding ClearFilesCommand}"
                         Background="{StaticResource BgSecondaryBrush}" Foreground="{StaticResource TextPrimaryBrush}"
                         BorderBrush="{StaticResource BorderBrush}" Padding="0,12">
                     <Button.Resources>
