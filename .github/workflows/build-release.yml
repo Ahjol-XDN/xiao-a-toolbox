@@ -78,25 +78,25 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.version.outputs.version }}
-          name: "XiaoA Toolbox v${{ steps.version.outputs.version }}"
+          name: "小A万能转换工具箱 v${{ steps.version.outputs.version }}"
           body: |
-            ## XiaoA Toolbox v${{ steps.version.outputs.version }}
+            ## 小A万能转换工具箱 v${{ steps.version.outputs.version }}
 
-            A 100% local file format conversion tool built with .NET 8 WPF.
+            基于 .NET 8 WPF 原生构建，完全本地运行，拖拽即用，隐私无忧。
 
-            ### How to Use
-            1. Install [.NET 8 Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) if not already installed
-            2. Extract the zip and run `install.ps1` in PowerShell
-            3. Launch from desktop shortcut
+            ### 安装步骤
+            1. 安装 [.NET 8 运行时](https://dotnet.microsoft.com/download/dotnet/8.0)（如未安装）
+            2. 解压 zip，右键 `install.ps1` → 使用 PowerShell 运行
+            3. 从桌面快捷方式启动
 
-            ### Features
-            - Video: format convert / compress / trim / to GIF / screenshot
-            - Audio: format convert / merge / trim
-            - Document: convert (DOCX/PDF/MD/HTML etc.)
-            - Image: convert (PNG/JPG/WebP etc.)
-            - PDF: merge / split
-            - Batch: multi-file conversion
-            - UI: Chinese / English
+            ### 功能
+            - 视频处理：格式转换 / 压缩 / 裁剪 / 转GIF / 截图
+            - 音频处理：格式转换 / 合并 / 裁剪
+            - 文档转换：DOCX/PDF/MD/HTML/TXT/RTF/EPUB 互转
+            - 图片转换：PNG/JPG/WebP/BMP/TIFF 互转
+            - PDF工具：合并 / 拆分
+            - 批量转换：多文件批量处理
+            - 界面：中文 / English 切换
 
           files: XiaoAToolbox-v${{ steps.version.outputs.version }}-portable.zip
           draft: false
