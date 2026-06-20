@@ -2,52 +2,49 @@ namespace XiaoAToolbox.Services;
 
 public class EngineService
 {
-    private static readonly string[] SearchDirs = new[]
-    {
-        AppDomain.CurrentDomain.BaseDirectory,
-        Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "engines", "ffmpeg", "bin"),
-        Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "engines", "pandoc"),
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "XiaoAToolbox", "engines", "ffmpeg", "bin"),
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "XiaoAToolbox", "engines", "pandoc"),
-    };
-
     public static string? FfmpegPath { get; private set; }
     public static string? FfprobePath { get; private set; }
     public static string? PandocPath { get; private set; }
-    public static string? WkhtmltopdfPath { get; private set; }
     public static bool FfmpegAvailable { get; private set; }
     public static bool PandocAvailable { get; private set; }
-    public static bool PdfEngineAvailable { get; private set; }
 
     public static void DetectEngines()
     {
-        foreach (var dir in SearchDirs)
-        {
-            var ffmpegExe = Path.Combine(dir, "ffmpeg.exe");
-            var ffprobeExe = Path.Combine(dir, "ffprobe.exe");
-            var pandocExe = Path.Combine(dir, "pandoc.exe");
-            var wkExe = Path.Combine(dir, "wkhtmltopdf.exe");
+        var baseDir = AppDomain.CurrentDomain.BaseDirectory;
 
-            if (!FfmpegAvailable && File.Exists(ffmpegExe))
+        // Search all subdirectories recursively for engines
+        var allExes = new List<string>();
+        if (Directory.Exists(baseDir))
+            SearchDir(baseDir, allExes);
+
+        foreach (var exe in allExes)
+        {
+            var name = Path.GetFileName(exe).ToLowerInvariant();
+            var dir = Path.GetDirectoryName(exe)!;
+
+            if (name == "ffmpeg.exe" && !FfmpegAvailable)
             {
-                FfmpegPath = ffmpegExe;
-                FfprobePath = ffprobeExe;
+                FfmpegPath = exe;
+                FfprobePath = Path.Combine(dir, "ffprobe.exe");
                 FfmpegAvailable = true;
             }
-
-            if (!PandocAvailable && File.Exists(pandocExe))
+            else if (name == "pandoc.exe" && !PandocAvailable)
             {
-                PandocPath = pandocExe;
+                PandocPath = exe;
                 PandocAvailable = true;
             }
-
-            if (!PdfEngineAvailable && File.Exists(wkExe))
-            {
-                WkhtmltopdfPath = wkExe;
-                PdfEngineAvailable = true;
-            }
         }
+    }
+
+    private static void SearchDir(string dir, List<string> results)
+    {
+        try
+        {
+            foreach (var f in Directory.GetFiles(dir, "*.exe"))
+                results.Add(f);
+            foreach (var d in Directory.GetDirectories(dir))
+                SearchDir(d, results);
+        }
+        catch { }
     }
 }

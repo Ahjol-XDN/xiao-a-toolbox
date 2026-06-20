@@ -10,7 +10,6 @@ namespace XiaoAToolbox.ViewModels;
 public class DocumentViewModel : ObservableObject
 {
     private readonly PandocService _pandoc = new();
-    private readonly NativeDocService _native = new();
     private readonly ConfigService _config = new();
     private readonly HistoryService _history = new();
 
@@ -40,8 +39,6 @@ public class DocumentViewModel : ObservableObject
     public ICommand ClearFilesCommand { get; }
     public ICommand StartCommand { get; }
     public ICommand BrowseOutputCommand { get; }
-
-    public bool HasPandoc => EngineService.PandocAvailable;
 
     public DocumentViewModel()
     {
@@ -87,16 +84,7 @@ public class DocumentViewModel : ObservableObject
                 var file = Files[i];
                 ProgressText = $"转换中... ({i + 1}/{Files.Count})";
                 var output = Path.Combine(outDir, Path.GetFileNameWithoutExtension(file.Path) + $".{Format}");
-
-                if (EngineService.PandocAvailable)
-                {
-                    await _pandoc.ConvertDocumentAsync(file.Path, output, IncludeToc);
-                }
-                else
-                {
-                    await _native.ConvertAsync(file.Path, output);
-                }
-
+                await _pandoc.ConvertDocumentAsync(file.Path, output, IncludeToc);
                 _history.Add(new HistoryEntry { Timestamp = DateTime.Now, InputFile = file.Path, OutputFile = output, Operation = "document", Format = Format, Success = true });
                 Progress = (i + 1) * 100 / Files.Count;
             }
