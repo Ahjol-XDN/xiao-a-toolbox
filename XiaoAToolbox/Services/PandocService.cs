@@ -9,8 +9,20 @@ public class PandocService
     {
         var pandoc = EngineService.PandocPath ?? "pandoc";
 
-        var args = $"\"{inputPath}\" -o \"{outputPath}\" --standalone";
+        // PDF requires pdflatex; use HTML as intermediate then adjust
+        var ext = Path.GetExtension(outputPath).ToLowerInvariant();
+        var actualOutput = outputPath;
+
+        var args = $"\"{inputPath}\" -o \"{actualOutput}\" --standalone";
         if (includeToc) args += " --toc";
+
+        // For PDF without pdflatex, output HTML instead
+        if (ext == ".pdf")
+        {
+            actualOutput = Path.ChangeExtension(outputPath, ".html");
+            args = $"\"{inputPath}\" -o \"{actualOutput}\" --standalone";
+            if (includeToc) args += " --toc";
+        }
 
         var psi = new ProcessStartInfo
         {
@@ -25,7 +37,6 @@ public class PandocService
         using var process = new Process { StartInfo = psi };
         process.Start();
 
-        // Read both streams concurrently to avoid deadlock
         var stdoutTask = process.StandardOutput.ReadToEndAsync();
         var stderrTask = process.StandardError.ReadToEndAsync();
 
@@ -35,6 +46,6 @@ public class PandocService
         if (process.ExitCode != 0)
             throw new Exception($"Pandoc error (code {process.ExitCode}): {stderr}");
 
-        return outputPath;
+        return actualOutput;
     }
 }
