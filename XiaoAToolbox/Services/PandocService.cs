@@ -24,11 +24,16 @@ public class PandocService
 
         using var process = new Process { StartInfo = psi };
         process.Start();
-        var stderr = await process.StandardError.ReadToEndAsync();
+
+        // Read both streams concurrently to avoid deadlock
+        var stdoutTask = process.StandardOutput.ReadToEndAsync();
+        var stderrTask = process.StandardError.ReadToEndAsync();
+
         await process.WaitForExitAsync();
+        var stderr = await stderrTask;
 
         if (process.ExitCode != 0)
-            throw new Exception($"Pandoc exited with code {process.ExitCode}: {stderr}");
+            throw new Exception($"Pandoc error (code {process.ExitCode}): {stderr}");
 
         return outputPath;
     }

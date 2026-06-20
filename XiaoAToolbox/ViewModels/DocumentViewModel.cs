@@ -59,14 +59,14 @@ public class DocumentViewModel : ObservableObject
 
     public void AddFiles()
     {
-        var dlg = new OpenFileDialog { Multiselect = true, Title = "閫夋嫨鏂囨。", Filter = "鏂囨。鏂囦欢|*.docx;*.md;*.txt;*.html;*.rtf;*.epub;*.tex|鎵€鏈夋枃浠秥*.*" };
+        var dlg = new OpenFileDialog { Multiselect = true, Title = "选择文档", Filter = "文档文件|*.docx;*.md;*.txt;*.html;*.rtf;*.epub;*.tex|所有文件|*.*" };
         if (dlg.ShowDialog() == true)
             foreach (var f in dlg.FileNames) AddFile(f);
     }
 
     private void BrowseOutput()
     {
-        var dlg = new OpenFolderDialog { Title = "閫夋嫨杈撳嚭鐩綍" };
+        var dlg = new OpenFolderDialog { Title = "选择输出目录" };
         if (dlg.ShowDialog() == true) OutputDir = dlg.FolderName;
     }
 
@@ -82,7 +82,7 @@ public class DocumentViewModel : ObservableObject
             for (int i = 0; i < Files.Count; i++)
             {
                 var file = Files[i];
-                ProgressText = $"杞崲涓?.. ({i + 1}/{Files.Count})";
+                ProgressText = $"转换中... ({i + 1}/{Files.Count})";
                 var output = Path.Combine(outDir, Path.GetFileNameWithoutExtension(file.Path) + $".{Format}");
                 await _pandoc.ConvertDocumentAsync(file.Path, output, IncludeToc);
                 _history.Add(new HistoryEntry { Timestamp = DateTime.Now, InputFile = file.Path, OutputFile = output, Operation = "document", Format = Format, Success = true });
