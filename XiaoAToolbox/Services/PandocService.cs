@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text;
 
 namespace XiaoAToolbox.Services;
 
@@ -7,32 +8,41 @@ public class PandocService
     public async Task<string> ConvertDocumentAsync(
         string inputPath, string outputPath, bool includeToc = false)
     {
-        var pandoc = EngineService.PandocPath ?? "pandoc";
+        if (!File.Exists(inputPath))
+            throw new FileNotFoundException($"Input file not found: {inputPath}");
 
-        // PDF requires pdflatex; use HTML as intermediate then adjust
+        var pandoc = EngineService.PandocPath ?? "pandoc";
         var ext = Path.GetExtension(outputPath).ToLowerInvariant();
         var actualOutput = outputPath;
 
-        var args = $"\"{inputPath}\" -o \"{actualOutput}\" --standalone";
-        if (includeToc) args += " --toc";
-
-        // For PDF without pdflatex, output HTML instead
+        // PDF needs pdflatex; fallback to HTML
         if (ext == ".pdf")
-        {
             actualOutput = Path.ChangeExtension(outputPath, ".html");
-            args = $"\"{inputPath}\" -o \"{actualOutput}\" --standalone";
-            if (includeToc) args += " --toc";
-        }
+
+        Directory.CreateDirectory(Path.GetDirectoryName(actualOutput)!);
+
+        // Use argument list to avoid quoting issues with Chinese paths
+        var args = new List<string>
+        {
+            inputPath,
+            "-o", actualOutput,
+            "--standalone"
+        };
+        if (includeToc) args.Add("--toc");
 
         var psi = new ProcessStartInfo
         {
             FileName = pandoc,
-            Arguments = args,
             UseShellExecute = false,
             CreateNoWindow = true,
             RedirectStandardError = true,
-            RedirectStandardOutput = true
+            RedirectStandardOutput = true,
+            StandardOutputEncoding = Encoding.UTF8,
+            StandardErrorEncoding = Encoding.UTF8
         };
+
+        foreach (var arg in args)
+            psi.ArgumentList.Add(arg);
 
         using var process = new Process { StartInfo = psi };
         process.Start();
