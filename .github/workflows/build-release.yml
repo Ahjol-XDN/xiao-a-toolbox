@@ -1,4 +1,4 @@
-name: Build & Release (WPF)
+﻿name: Build & Release (WPF)
 
 on:
   push:
@@ -78,23 +78,25 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.version.outputs.version }}
-          name: "灏廇宸ュ叿绠?v${{ steps.version.outputs.version }}"
+          name: "XiaoA Toolbox v${{ steps.version.outputs.version }}"
           body: |
-            ## 灏廇涓囪兘杞崲宸ュ叿绠?v${{ steps.version.outputs.version }}
+            ## XiaoA Toolbox v${{ steps.version.outputs.version }}
 
-            鍩轰簬 .NET 8 WPF 鍘熺敓鏋勫缓锛屽畬鍏ㄦ湰鍦拌繍琛屻€?
-            ### 浣跨敤鏂瑰紡
-            1. 纭繚宸插畨瑁?[.NET 8 杩愯鏃禲(https://dotnet.microsoft.com/download/dotnet/8.0)
-            2. 瑙ｅ帇 zip锛屽彸閿?`install.ps1` 鈫?浣跨敤 PowerShell 杩愯
-            3. 妗岄潰浼氱敓鎴愬揩鎹锋柟寮?
-            ### 鍔熻兘
-            - 馃幀 瑙嗛鏍煎紡杞崲 / 鍘嬬缉 / 瑁佸壀 / 杞?GIF / 鎴浘
-            - 馃幍 瑙嗛鎻愬彇闊抽
-            - 馃帶 闊抽杞崲 / 鍚堝苟 / 瑁佸壀
-            - 馃搫 鏂囨。杞崲 (DOCX/PDF/MD/HTML 绛?
-            - 馃柤锔?鍥剧墖杞崲 (PNG/JPG/WebP 绛?
-            - 馃搼 PDF 鍚堝苟 / 鎷嗗垎
-            - 馃摝 鎵归噺缁熶竴杞崲
-            - 馃寪 涓?/ English 鍙岃
+            A 100% local file format conversion tool built with .NET 8 WPF.
+
+            ### How to Use
+            1. Install [.NET 8 Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) if not already installed
+            2. Extract the zip and run `install.ps1` in PowerShell
+            3. Launch from desktop shortcut
+
+            ### Features
+            - Video: format convert / compress / trim / to GIF / screenshot
+            - Audio: format convert / merge / trim
+            - Document: convert (DOCX/PDF/MD/HTML etc.)
+            - Image: convert (PNG/JPG/WebP etc.)
+            - PDF: merge / split
+            - Batch: multi-file conversion
+            - UI: Chinese / English
+
           files: XiaoAToolbox-v${{ steps.version.outputs.version }}-portable.zip
           draft: false
