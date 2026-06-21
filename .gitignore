@@ -34,3 +34,7 @@ desktop.ini
 xiao-a-toolbox/node_modules/
 xiao-a-toolbox/dist/
 xiao-a-toolbox/dist-electron/
+
+# Temp output files
+err.txt
+out.txt
