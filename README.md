@@ -4,7 +4,7 @@
 > 本项目基于 FFmpeg 和 Pandoc，使用 .NET 8 WPF 原生构建，轻量高效。
 
 <p align="left">
-  <img src="https://img.shields.io/badge/version-2.1.1-blue" alt="version" />
+  <img src="https://img.shields.io/badge/version-2.1.2-blue" alt="version" />
   <img src="https://img.shields.io/badge/.NET-8.0-purple" alt=".NET" />
   <img src="https://img.shields.io/badge/license-MIT-green" alt="license" />
   <img src="https://img.shields.io/badge/platform-Windows%2010%2B-lightgrey" alt="platform" />

@@ -32,14 +32,19 @@
                                Foreground="{StaticResource TextPrimaryBrush}"
                                FontSize="15" Margin="0,0,0,12"/>
 
-                    <TextBlock Foreground="{StaticResource TextSecondaryBrush}"
-                               FontSize="13" LineHeight="24">
-                        一款完全本地运行的桌面文件格式转换工具<LineBreak/>
-                        拖拽即用，隐私无忧<LineBreak/><LineBreak/>
-                        <Run Text="{Binding Description, Mode=OneWay}" FontWeight="SemiBold"
-                             Foreground="{StaticResource TextPrimaryBrush}"/><LineBreak/>
-                        <Run Text="{Binding TechStack, Mode=OneWay}" />
-                    </TextBlock>
+                    <TextBlock Text="一款完全本地运行的桌面文件格式转换工具"
+                               Foreground="{StaticResource TextSecondaryBrush}"
+                               FontSize="13" Margin="0,0,0,4"/>
+                    <TextBlock Text="拖拽即用，隐私无忧"
+                               Foreground="{StaticResource TextSecondaryBrush}"
+                               FontSize="13" Margin="0,0,0,12"/>
+
+                    <TextBlock FontWeight="SemiBold" FontSize="13"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               Text="{Binding Description, Mode=OneWay}" Margin="0,0,0,4"/>
+                    <TextBlock FontSize="13"
+                               Foreground="{StaticResource TextSecondaryBrush}"
+                               Text="{Binding TechStack, Mode=OneWay}"/>
                 </StackPanel>
             </Border>
 
