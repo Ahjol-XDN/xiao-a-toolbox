@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Win32;
@@ -52,10 +52,16 @@ public class ImageViewModel : ObservableObject
     public ImageViewModel()
     {
         AddFilesCommand = new RelayCommand(AddFiles);
-        ClearFilesCommand = new RelayCommand(() => { Files.Clear(); OkCount = 0; FailCount = 0; });
-        StartCommand = new RelayCommand(async () => await StartAsync(), () => !Running && Files.Count > 0);
+        ClearFilesCommand = new RelayCommand(() => { Files.Clear(); OkCount = 0; FailCount = 0; OnPropertyChanged(nameof(Inactive)); });
+        StartCommand = new RelayCommand(RunStartAsync, () => !Running && Files.Count > 0);
         BrowseOutputCommand = new RelayCommand(BrowseOutput);
         _outputDir = _config.Load().OutputDirectory;
+
+        Files.CollectionChanged += (_, _) =>
+        {
+            OnPropertyChanged(nameof(Inactive));
+            ((RelayCommand)StartCommand).RaiseCanExecuteChanged();
+        };
     }
 
     public void AddFile(string path)
@@ -63,7 +69,6 @@ public class ImageViewModel : ObservableObject
         if (!File.Exists(path) || Files.Any(f => f.Path == path)) return;
         var fi = new FileInfo(path);
         Files.Add(new FileItem { Path = path, Size = fi.Length });
-        OnPropertyChanged(nameof(Inactive));
     }
 
     public void AddFiles()
@@ -79,11 +84,17 @@ public class ImageViewModel : ObservableObject
         if (dlg.ShowDialog() == true) OutputDir = dlg.FolderName;
     }
 
+    private async void RunStartAsync()
+    {
+        try { await StartAsync(); }
+        catch (Exception ex) { FailCount++; MessageBox.Show(ex.Message, "错误", MessageBoxButton.OK, MessageBoxImage.Error); }
+    }
+
     private async Task StartAsync()
     {
         if (Files.Count == 0) return;
         Running = true; Progress = 0; OkCount = 0; FailCount = 0;
-        var outDir = string.IsNullOrEmpty(OutputDir) ? Path.GetDirectoryName(Files[0].Path)! : OutputDir;
+        var outDir = string.IsNullOrEmpty(OutputDir) ? Path.GetDirectoryName(Files[0].Path) ?? "." : OutputDir;
         Directory.CreateDirectory(outDir);
 
         try
@@ -99,7 +110,7 @@ public class ImageViewModel : ObservableObject
                 _history.Add(new HistoryEntry { Timestamp = DateTime.Now, InputFile = file.Path, OutputFile = output, Operation = "image", Format = Format, Success = true });
             }
         }
-        catch (Exception ex) { FailCount++; MessageBox.Show(ex.Message); }
+        catch (Exception ex) { FailCount++; MessageBox.Show(ex.Message, "错误", MessageBoxButton.OK, MessageBoxImage.Error); }
         finally { Running = false; }
     }
 }

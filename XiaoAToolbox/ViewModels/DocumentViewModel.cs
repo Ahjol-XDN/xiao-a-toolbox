@@ -55,7 +55,7 @@ public class DocumentViewModel : ObservableObject
     {
         AddFilesCommand = new RelayCommand(AddFiles);
         ClearFilesCommand = new RelayCommand(Clear);
-        StartCommand = new RelayCommand(async () => await StartAsync());
+        StartCommand = new RelayCommand(RunStartAsync);
         BrowseOutputCommand = new RelayCommand(BrowseOutput);
         _outputDir = _config.Load().OutputDirectory;
         Files.CollectionChanged += (_, _) =>
@@ -70,7 +70,6 @@ public class DocumentViewModel : ObservableObject
         if (!File.Exists(path) || Files.Any(f => f.Path == path)) return;
         var fi = new FileInfo(path);
         Files.Add(new FileItem { Path = path, Size = fi.Length });
-        OnPropertyChanged(nameof(Inactive));
     }
 
     public void AddFiles()
@@ -92,13 +91,18 @@ public class DocumentViewModel : ObservableObject
         ProgressText = "";
         SuccessCount = 0;
         FailCount = 0;
-        OnPropertyChanged(nameof(Inactive));
     }
 
     private void BrowseOutput()
     {
         var dlg = new OpenFolderDialog { Title = "选择输出目录" };
         if (dlg.ShowDialog() == true) OutputDir = dlg.FolderName;
+    }
+
+    private async void RunStartAsync()
+    {
+        try { await StartAsync(); }
+        catch (Exception ex) { FailCount++; MessageBox.Show(ex.Message, "错误", MessageBoxButton.OK, MessageBoxImage.Error); }
     }
 
     private async Task StartAsync()
@@ -120,7 +124,7 @@ public class DocumentViewModel : ObservableObject
         SuccessCount = 0;
         FailCount = 0;
         var outDir = string.IsNullOrEmpty(OutputDir)
-            ? Path.GetDirectoryName(Files[0].Path)!
+            ? Path.GetDirectoryName(Files[0].Path) ?? "."
             : OutputDir;
         Directory.CreateDirectory(outDir);
 

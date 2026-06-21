@@ -5,6 +5,46 @@ namespace XiaoAToolbox;
 
 public partial class App : Application
 {
+    public App()
+    {
+        DispatcherUnhandledException += OnDispatcherUnhandledException;
+        AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+        TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
+    }
+
+    private void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+    {
+        LogCrash(e.Exception);
+        MessageBox.Show($"程序发生错误，已保存日志到桌面。\n\n{e.Exception.Message}", "错误",
+            MessageBoxButton.OK, MessageBoxImage.Error);
+        e.Handled = true;
+    }
+
+    private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+    {
+        if (e.ExceptionObject is Exception ex)
+            LogCrash(ex);
+    }
+
+    private void OnUnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
+    {
+        LogCrash(e.Exception);
+        e.SetObserved();
+    }
+
+    private static void LogCrash(Exception ex)
+    {
+        try
+        {
+            var logPath = System.IO.Path.Combine(
+                System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop),
+                "xiao-a-crash.log");
+            var msg = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {ex}";
+            System.IO.File.AppendAllText(logPath, msg + System.Environment.NewLine);
+        }
+        catch { }
+    }
+
     private void OnStartup(object sender, StartupEventArgs e)
     {
         try
@@ -18,10 +58,7 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            var logPath = System.IO.Path.Combine(
-                System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop),
-                "xiao-a-crash.log");
-            System.IO.File.WriteAllText(logPath, ex.ToString());
+            LogCrash(ex);
             MessageBox.Show("启动失败，错误日志已保存到桌面。\n\n" + ex.Message, "错误", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }

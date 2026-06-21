@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Win32;
@@ -46,10 +46,16 @@ public class PdfViewModel : ObservableObject
     public PdfViewModel()
     {
         AddFilesCommand = new RelayCommand(AddFiles);
-        ClearFilesCommand = new RelayCommand(() => { Files.Clear(); OkCount = 0; FailCount = 0; });
-        StartCommand = new RelayCommand(async () => await StartAsync(), () => !Running && Files.Count > 0);
+        ClearFilesCommand = new RelayCommand(() => { Files.Clear(); OkCount = 0; FailCount = 0; OnPropertyChanged(nameof(Inactive)); });
+        StartCommand = new RelayCommand(RunStartAsync, () => !Running && Files.Count > 0);
         BrowseOutputCommand = new RelayCommand(BrowseOutput);
         _outputDir = _config.Load().OutputDirectory;
+
+        Files.CollectionChanged += (_, _) =>
+        {
+            OnPropertyChanged(nameof(Inactive));
+            ((RelayCommand)StartCommand).RaiseCanExecuteChanged();
+        };
     }
 
     public void AddFile(string path)
@@ -57,7 +63,6 @@ public class PdfViewModel : ObservableObject
         if (!File.Exists(path) || Files.Any(f => f.Path == path)) return;
         var fi = new FileInfo(path);
         Files.Add(new FileItem { Path = path, Size = fi.Length });
-        OnPropertyChanged(nameof(Inactive));
     }
 
     public void AddFiles()
@@ -73,6 +78,12 @@ public class PdfViewModel : ObservableObject
         if (dlg.ShowDialog() == true) OutputDir = dlg.FolderName;
     }
 
+    private async void RunStartAsync()
+    {
+        try { await StartAsync(); }
+        catch (Exception ex) { FailCount++; MessageBox.Show(ex.Message, "错误", MessageBoxButton.OK, MessageBoxImage.Error); }
+    }
+
     private async Task StartAsync()
     {
         if (Files.Count == 0) return;
@@ -82,7 +93,7 @@ public class PdfViewModel : ObservableObject
         {
             if (Mode == "merge")
             {
-                var outDir = string.IsNullOrEmpty(OutputDir) ? Path.GetDirectoryName(Files[0].Path)! : OutputDir;
+                var outDir = string.IsNullOrEmpty(OutputDir) ? Path.GetDirectoryName(Files[0].Path) ?? "." : OutputDir;
                 var output = Path.Combine(outDir, $"merged_{DateTime.Now:yyyyMMddHHmmss}.pdf");
                 await _pdf.MergeAsync(Files.Select(f => f.Path).ToList(), output);
                 OkCount = 1;
@@ -90,7 +101,7 @@ public class PdfViewModel : ObservableObject
             }
             else
             {
-                var outDir = string.IsNullOrEmpty(OutputDir) ? Path.GetDirectoryName(Files[0].Path)! : OutputDir;
+                var outDir = string.IsNullOrEmpty(OutputDir) ? Path.GetDirectoryName(Files[0].Path) ?? "." : OutputDir;
                 var ranges = ParseRanges(PageRanges);
                 var results = await _pdf.SplitAsync(Files[0].Path, outDir, ranges);
                 OkCount = results.Count;
@@ -98,7 +109,7 @@ public class PdfViewModel : ObservableObject
                     _history.Add(new HistoryEntry { Timestamp = DateTime.Now, InputFile = Files[0].Path, OutputFile = r, Operation = "pdf_split", Format = "pdf", Success = true });
             }
         }
-        catch (Exception ex) { FailCount++; MessageBox.Show(ex.Message); }
+        catch (Exception ex) { FailCount++; MessageBox.Show(ex.Message, "错误", MessageBoxButton.OK, MessageBoxImage.Error); }
         finally { Running = false; }
     }
 

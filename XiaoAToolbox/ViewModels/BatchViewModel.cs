@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Win32;
@@ -52,10 +52,16 @@ public class BatchViewModel : ObservableObject
     public BatchViewModel()
     {
         AddFilesCommand = new RelayCommand(AddFiles);
-        ClearFilesCommand = new RelayCommand(() => { Files.Clear(); OkCount = 0; FailCount = 0; });
-        StartCommand = new RelayCommand(async () => await StartAsync(), () => !Running && Files.Count > 0);
+        ClearFilesCommand = new RelayCommand(() => { Files.Clear(); OkCount = 0; FailCount = 0; OnPropertyChanged(nameof(Inactive)); });
+        StartCommand = new RelayCommand(RunStartAsync, () => !Running && Files.Count > 0);
         BrowseOutputCommand = new RelayCommand(BrowseOutput);
         _outputDir = _config.Load().OutputDirectory;
+
+        Files.CollectionChanged += (_, _) =>
+        {
+            OnPropertyChanged(nameof(Inactive));
+            ((RelayCommand)StartCommand).RaiseCanExecuteChanged();
+        };
     }
 
     public void AddFile(string path)
@@ -63,7 +69,6 @@ public class BatchViewModel : ObservableObject
         if (!File.Exists(path) || Files.Any(f => f.Path == path)) return;
         var fi = new FileInfo(path);
         Files.Add(new FileItem { Path = path, Size = fi.Length });
-        OnPropertyChanged(nameof(Inactive));
     }
 
     public void AddFiles()
@@ -80,12 +85,31 @@ public class BatchViewModel : ObservableObject
         if (dlg.ShowDialog() == true) OutputDir = dlg.FolderName;
     }
 
+    private async void RunStartAsync()
+    {
+        try { await StartAsync(); }
+        catch (Exception ex) { FailCount++; MessageBox.Show(ex.Message, "错误", MessageBoxButton.OK, MessageBoxImage.Error); }
+    }
+
     private async Task StartAsync()
     {
         if (Files.Count == 0) return;
         Running = true; Progress = 0; OkCount = 0; FailCount = 0;
-        var outDir = string.IsNullOrEmpty(OutputDir) ? Path.GetDirectoryName(Files[0].Path)! : OutputDir;
-        Directory.CreateDirectory(outDir);
+
+        var baseDir = string.IsNullOrEmpty(OutputDir)
+            ? Path.GetDirectoryName(Files[0].Path) ?? "."
+            : OutputDir;
+
+        try
+        {
+            Directory.CreateDirectory(baseDir);
+        }
+        catch (Exception ex)
+        {
+            FailCount++;
+            MessageBox.Show("无法创建输出目录：" + ex.Message, "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
 
         try
         {
@@ -93,7 +117,7 @@ public class BatchViewModel : ObservableObject
             {
                 var file = Files[i];
                 ProgressText = $"转换中... ({i + 1}/{Files.Count})";
-                var output = Path.Combine(outDir, Path.GetFileNameWithoutExtension(file.Path) + $".{Format}");
+                var output = Path.Combine(baseDir, Path.GetFileNameWithoutExtension(file.Path) + $".{Format}");
                 try
                 {
                     await _ffmpeg.ConvertVideoAsync(file.Path, output, Format, bitrate: Bitrate, resolution: string.IsNullOrEmpty(Resolution) ? null : Resolution);
@@ -108,7 +132,7 @@ public class BatchViewModel : ObservableObject
                 Progress = (i + 1) * 100 / Files.Count;
             }
         }
-        catch (Exception ex) { FailCount++; MessageBox.Show(ex.Message); }
+        catch (Exception ex) { FailCount++; MessageBox.Show(ex.Message, "错误", MessageBoxButton.OK, MessageBoxImage.Error); }
         finally { Running = false; }
     }
 }

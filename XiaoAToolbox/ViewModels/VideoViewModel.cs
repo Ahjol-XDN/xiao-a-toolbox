@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Win32;
@@ -105,7 +105,7 @@ public class VideoViewModel : ObservableObject
     {
         AddFilesCommand = new RelayCommand(AddFiles);
         ClearFilesCommand = new RelayCommand(ClearFiles);
-        StartConvertCommand = new RelayCommand(async () => await StartConvert(), () => !Running && Files.Count > 0);
+        StartConvertCommand = new RelayCommand(RunStartConvert, () => !Running && Files.Count > 0);
         CancelCommand = new RelayCommand(Cancel);
         BrowseOutputCommand = new RelayCommand(BrowseOutput);
         AddFromDropCommand = new RelayCommand<string[]>(paths =>
@@ -115,6 +115,12 @@ public class VideoViewModel : ObservableObject
         });
 
         _outputDir = _config.Load().OutputDirectory;
+
+        Files.CollectionChanged += (_, _) =>
+        {
+            OnPropertyChanged(nameof(Inactive));
+            ((RelayCommand)StartConvertCommand).RaiseCanExecuteChanged();
+        };
     }
 
     public void AddFiles()
@@ -133,7 +139,6 @@ public class VideoViewModel : ObservableObject
         var fi = new FileInfo(path);
         var item = new FileItem { Path = path, Size = fi.Length };
         Files.Add(item);
-        OnPropertyChanged(nameof(Inactive));
     }
 
     public void ClearFiles()
@@ -141,7 +146,6 @@ public class VideoViewModel : ObservableObject
         Files.Clear();
         SuccessCount = 0;
         FailCount = 0;
-        OnPropertyChanged(nameof(Inactive));
     }
 
     public void BrowseOutput()
@@ -163,7 +167,12 @@ public class VideoViewModel : ObservableObject
     private void UpdateUI()
     {
         if (ForceMode == "extract-audio") return;
-        // Update visibility based on mode
+    }
+
+    private async void RunStartConvert()
+    {
+        try { await StartConvert(); }
+        catch (Exception ex) { FailCount++; MessageBox.Show(ex.Message, "错误", MessageBoxButton.OK, MessageBoxImage.Error); }
     }
 
     public async Task StartConvert()
@@ -250,12 +259,11 @@ public class VideoViewModel : ObservableObject
         }
         catch (OperationCanceledException)
         {
-            // User cancelled
         }
         catch (Exception ex)
         {
             FailCount++;
-            MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(ex.Message, "错误", MessageBoxButton.OK, MessageBoxImage.Error);
         }
         finally
         {
