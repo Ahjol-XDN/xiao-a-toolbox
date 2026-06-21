@@ -1,7 +1,7 @@
 ﻿# 小A万能转换工具箱 2.1.1
 
 > 一款完全本地运行的桌面文件格式转换工具 — 拖拽即用，隐私无忧。
-> 基于 .NET 8 WPF 原生构建，轻量高效。
+> 本项目基于 FFmpeg 和 Pandoc，使用 .NET 8 WPF 原生构建，轻量高效。
 
 ---
 
@@ -41,8 +41,8 @@ dotnet publish -c Release -o publish --self-contained false -p:RuntimeIdentifier
 | 组件 | 说明 |
 |---|---|
 | 框架 | .NET 8 WPF（Windows 原生） |
-| 视频/音频 | FFmpeg |
-| 文档 | Pandoc + 纯 .NET docx 转换器 |
+| 视频/音频引擎 | FFmpeg |
+| 文档引擎 | Pandoc + 纯 .NET docx 转换器 |
 | PDF | PdfSharpCore + Edge 无头模式 |
 | 图片 | SixLabors.ImageSharp |
 
