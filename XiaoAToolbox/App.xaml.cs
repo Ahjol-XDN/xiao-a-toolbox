@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 using XiaoAToolbox.Services;
 
 namespace XiaoAToolbox;
@@ -7,12 +7,23 @@ public partial class App : Application
 {
     private void OnStartup(object sender, StartupEventArgs e)
     {
-        EngineService.DetectEngines();
-        var config = new ConfigService().Load();
-        ApplyTheme(config.Theme);
-        LocalizationService.Instance.SetLanguage(config.Language);
-        var mainWindow = new MainWindow();
-        mainWindow.Show();
+        try
+        {
+            EngineService.DetectEngines();
+            var config = new ConfigService().Load();
+            ApplyTheme(config.Theme);
+            LocalizationService.Instance.SetLanguage(config.Language);
+            var mainWindow = new MainWindow();
+            mainWindow.Show();
+        }
+        catch (Exception ex)
+        {
+            var logPath = System.IO.Path.Combine(
+                System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop),
+                "xiao-a-crash.log");
+            System.IO.File.WriteAllText(logPath, ex.ToString());
+            MessageBox.Show("启动失败，错误日志已保存到桌面。\n\n" + ex.Message, "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 
     public static void ApplyTheme(string theme)
@@ -28,7 +39,6 @@ public partial class App : Application
         var uri = new Uri($"pack://application:,,,/Resources/Themes/{themeName}");
         var app = Current;
 
-        // Remove old merged dictionaries
         var toRemove = new List<ResourceDictionary>();
         foreach (var dict in app.Resources.MergedDictionaries)
             toRemove.Add(dict);
