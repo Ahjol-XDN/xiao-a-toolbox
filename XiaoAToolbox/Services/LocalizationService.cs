@@ -113,6 +113,7 @@ public class LocalizationService : INotifyPropertyChanged
         ["Settings"] = "设置",
         ["About"] = "关于",
         ["AboutText"] = "小A万能转换工具箱 2.1\n完全本地运行的文件格式转换工具\n基于 .NET 8 WPF 构建",
+        ["NavAbout"] = "鍏充簬",
     };
 
     private static readonly Dictionary<string, string> enUS = new()
@@ -188,5 +189,6 @@ public class LocalizationService : INotifyPropertyChanged
         ["Settings"] = "Settings",
         ["About"] = "About",
         ["AboutText"] = "XiaoA Toolbox 2.1\n100% local file format conversion tool\nBuilt with .NET 8 WPF",
+        ["NavAbout"] = "About",
     };
 }

@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 using XiaoAToolbox.Services;
 
@@ -30,7 +30,6 @@ public class MainViewModel : ObservableObject
 
     public ICommand NavigateCommand { get; }
 
-    // Page ViewModels
     public VideoViewModel VideoVM { get; }
     public VideoViewModel VideoToAudioVM { get; }
     public AudioViewModel AudioVM { get; }
@@ -39,6 +38,7 @@ public class MainViewModel : ObservableObject
     public PdfViewModel PdfVM { get; }
     public BatchViewModel BatchVM { get; }
     public SettingsViewModel SettingsVM { get; }
+    public AboutViewModel AboutVM { get; }
 
     public MainViewModel()
     {
@@ -50,21 +50,22 @@ public class MainViewModel : ObservableObject
         PdfVM = new PdfViewModel();
         BatchVM = new BatchViewModel();
         SettingsVM = new SettingsViewModel();
+        AboutVM = new AboutViewModel();
 
         NavigateCommand = new RelayCommand<string>(nav =>
         {
             if (nav != null) CurrentNav = nav;
         });
 
-        // Build nav items
         NavItems.Add(new NavItem { Key = "NavVideo", Icon = "🎬", PageName = "视频处理" });
-        NavItems.Add(new NavItem { Key = "NavVideoToAudio", Icon = "🎵", PageName = "视频转音频" });
-        NavItems.Add(new NavItem { Key = "NavAudio", Icon = "🎧", PageName = "音频处理" });
-        NavItems.Add(new NavItem { Key = "NavDocument", Icon = "📄", PageName = "文档转换" });
+        NavItems.Add(new NavItem { Key = "NavVideoToAudio", Icon = "🎍", PageName = "视频转音频" });
+        NavItems.Add(new NavItem { Key = "NavAudio", Icon = "🎵", PageName = "音频处理" });
+        NavItems.Add(new NavItem { Key = "NavDocument", Icon = "📫", PageName = "文档转换" });
         NavItems.Add(new NavItem { Key = "NavImage", Icon = "🖼️", PageName = "图片转换" });
-        NavItems.Add(new NavItem { Key = "NavPdf", Icon = "📑", PageName = "PDF工具" });
-        NavItems.Add(new NavItem { Key = "NavBatch", Icon = "📦", PageName = "批量转换" });
+        NavItems.Add(new NavItem { Key = "NavPdf", Icon = "📼", PageName = "PDF工具" });
+        NavItems.Add(new NavItem { Key = "NavBatch", Icon = "📝", PageName = "批量转换" });
         NavItems.Add(new NavItem { Key = "NavSettings", Icon = "⚙️", PageName = "设置" });
+        NavItems.Add(new NavItem { Key = "NavAbout", Icon = "ℹ️", PageName = "关于" });
 
         CurrentPage = VideoVM;
     }
@@ -81,6 +82,7 @@ public class MainViewModel : ObservableObject
             "PDF工具" => PdfVM,
             "批量转换" => BatchVM,
             "设置" => SettingsVM,
+            "关于" => AboutVM,
             _ => VideoVM
         };
     }

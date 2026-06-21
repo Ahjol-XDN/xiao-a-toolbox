@@ -1,0 +1,99 @@
+﻿<UserControl x:Class="XiaoAToolbox.Views.AboutView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="24" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <!-- 图标区域 -->
+            <Border Width="100" Height="100" CornerRadius="20"
+                    Background="{StaticResource AccentBrush}" Margin="0,0,0,24"
+                    HorizontalAlignment="Center">
+                <TextBlock Text="🔄" FontSize="48"
+                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+
+            <!-- 应用名 -->
+            <TextBlock Text="小A万能转换工具箱"
+                       FontSize="24" FontWeight="Bold"
+                       Foreground="{StaticResource TextPrimaryBrush}"
+                       HorizontalAlignment="Center" Margin="0,0,0,8"/>
+
+            <!-- 版本号 -->
+            <TextBlock FontSize="16" Foreground="{StaticResource AccentBrush}"
+                       HorizontalAlignment="Center" Margin="0,0,0,24">
+                <Run Text="v" /><Run Text="{Binding Version}" />
+            </TextBlock>
+
+            <!-- 说明卡片 -->
+            <Border BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="1"
+                    CornerRadius="12" Padding="24" Background="{StaticResource BgCardBrush}"
+                    Width="420" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="关于本软件" FontWeight="SemiBold"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               FontSize="15" Margin="0,0,0,12"/>
+
+                    <TextBlock Foreground="{StaticResource TextSecondaryBrush}"
+                               FontSize="13" LineHeight="24">
+                        一款完全本地运行的桌面文件格式转换工具<LineBreak/>
+                        拖拽即用，隐私无忧<LineBreak/><LineBreak/>
+                        <Run Text="{Binding Description}" FontWeight="SemiBold"
+                             Foreground="{StaticResource TextPrimaryBrush}"/><LineBreak/>
+                        <Run Text="{Binding TechStack}" />
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+
+            <!-- 技术栈 -->
+            <Border BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="1"
+                    CornerRadius="12" Padding="24" Background="{StaticResource BgCardBrush}"
+                    Width="420">
+                <StackPanel>
+                    <TextBlock Text="技术栈" FontWeight="SemiBold"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               FontSize="15" Margin="0,0,0,12"/>
+
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="框架" Foreground="{StaticResource TextTertiaryBrush}" FontSize="13"/>
+                        <TextBlock Grid.Column="1" Text=".NET 8 WPF" Foreground="{StaticResource TextPrimaryBrush}" FontSize="13"/>
+                    </Grid>
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="视频/音频" Foreground="{StaticResource TextTertiaryBrush}" FontSize="13"/>
+                        <TextBlock Grid.Column="1" Text="FFmpeg" Foreground="{StaticResource TextPrimaryBrush}" FontSize="13"/>
+                    </Grid>
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="文档转换" Foreground="{StaticResource TextTertiaryBrush}" FontSize="13"/>
+                        <TextBlock Grid.Column="1" Text="Pandoc" Foreground="{StaticResource TextPrimaryBrush}" FontSize="13"/>
+                    </Grid>
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="PDF" Foreground="{StaticResource TextTertiaryBrush}" FontSize="13"/>
+                        <TextBlock Grid.Column="1" Text="PdfSharpCore" Foreground="{StaticResource TextPrimaryBrush}" FontSize="13"/>
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="图片" Foreground="{StaticResource TextTertiaryBrush}" FontSize="13"/>
+                        <TextBlock Grid.Column="1" Text="SixLabors.ImageSharp" Foreground="{StaticResource TextPrimaryBrush}" FontSize="13"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
