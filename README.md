@@ -1,6 +1,7 @@
 ﻿# 小A万能转换工具箱 🔄
 
 > 完全本地运行的桌面文件格式转换工具 — 拖拽即用，隐私无忧。
+> 本项目基于 FFmpeg 和 Pandoc，使用 .NET 8 WPF 原生构建，轻量高效。
 
 <p align="left">
   <img src="https://img.shields.io/badge/version-2.1.1-blue" alt="version" />
