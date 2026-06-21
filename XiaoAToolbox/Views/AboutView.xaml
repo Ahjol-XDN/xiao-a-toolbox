@@ -20,7 +20,7 @@
             <!-- 版本号 -->
             <TextBlock FontSize="16" Foreground="{StaticResource AccentBrush}"
                        HorizontalAlignment="Center" Margin="0,0,0,24">
-                <Run Text="v" /><Run Text="{Binding Version}" />
+                <Run Text="v" /><Run Text="{Binding Version, Mode=OneWay}" />
             </TextBlock>
 
             <!-- 说明卡片 -->
@@ -36,9 +36,9 @@
                                FontSize="13" LineHeight="24">
                         一款完全本地运行的桌面文件格式转换工具<LineBreak/>
                         拖拽即用，隐私无忧<LineBreak/><LineBreak/>
-                        <Run Text="{Binding Description}" FontWeight="SemiBold"
+                        <Run Text="{Binding Description, Mode=OneWay}" FontWeight="SemiBold"
                              Foreground="{StaticResource TextPrimaryBrush}"/><LineBreak/>
-                        <Run Text="{Binding TechStack}" />
+                        <Run Text="{Binding TechStack, Mode=OneWay}" />
                     </TextBlock>
                 </StackPanel>
             </Border>
