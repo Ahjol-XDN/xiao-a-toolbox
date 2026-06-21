@@ -109,8 +109,7 @@
             </Border>
 
             <!-- 结果统计 -->
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,12"
-                        Visibility="{Binding Running, Converter={StaticResource BoolToVis}, ConverterParameter=invert}">
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
                 <TextBlock Foreground="{StaticResource SuccessBrush}" FontSize="13">
                     <Run Text="成功 " /><Run Text="{Binding SuccessCount}" /><Run Text=" 个" />
                 </TextBlock>
